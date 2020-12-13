@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space cave expedition", "Space cave expedition.csproj", "{EC3CE7EE-123D-4665-9246-4A0627082439}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC3CE7EE-123D-4665-9246-4A0627082439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3CE7EE-123D-4665-9246-4A0627082439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3CE7EE-123D-4665-9246-4A0627082439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3CE7EE-123D-4665-9246-4A0627082439}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6AD432F5-E108-45B7-AA63-A61AFC4C3C1B}
+	EndGlobalSection
+EndGlobal
