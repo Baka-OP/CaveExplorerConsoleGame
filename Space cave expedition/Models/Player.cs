@@ -9,6 +9,8 @@ namespace Space_cave_expedition.Models
     {
         public override void Move(PlayerMoveDirection directionOfMovement)
         {
+            int previousTop = Console.CursorTop;
+            int previousLeft = Console.CursorLeft;
             switch (directionOfMovement)
             {
                 //No need to fire events, by changing Position and Appearance properties, the event fires automatically
@@ -37,6 +39,7 @@ namespace Space_cave_expedition.Models
                 default:
                     throw new ArgumentException("Error. Unexpected movement direction.");
             }
+            Console.SetCursorPosition(previousLeft, previousTop);
         }
         /// <summary>
         /// New instance of a player entity, doesn't mean you automatically control it though, just has the functions and appearance of one.

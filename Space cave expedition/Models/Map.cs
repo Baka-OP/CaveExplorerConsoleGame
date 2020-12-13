@@ -62,9 +62,13 @@ namespace Space_cave_expedition.Models
         public void Start()
         {
             Console.Clear();
+            DisplayMap();
+            isStarted = true;
+        }
+        private void DisplayMap()
+        {
             Console.WriteLine(MapTemplate);
             DisplayAllEntities();
-            isStarted = true;
         }
         private void DisplayAllEntities()
         {
@@ -76,7 +80,7 @@ namespace Space_cave_expedition.Models
 
         private void EntityPositionChanged(object source, EntityPositionChangedArgs e)
         {
-            ControllableEntity sender = source as ControllableEntity;
+            /*ControllableEntity sender = source as ControllableEntity;
             Console.SetCursorPosition(e.PreviousPositionLeft, e.PreviousPositionTop);
 
             for(int i = 0; i < sender.EntityHeight; i++)
@@ -86,7 +90,9 @@ namespace Space_cave_expedition.Models
             }
 
             Console.SetCursorPosition(e.NewPositionLeft, e.NewPositionTop);
-            sender.Display(e.NewPositionLeft, e.NewPositionTop, DisplayMethod.StartFromTopLeft);
+            sender.Display(e.NewPositionLeft, e.NewPositionTop, DisplayMethod.StartFromTopLeft);*/
+            Console.SetCursorPosition(0, 0);
+            DisplayMap();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Space_cave_expedition
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
 
-            Player player = new Player(0, 15);
+            Player player = new Player(0, 7);
 
             Map testMap = new Map(File.ReadAllText(ProgramLocation + "\\Map Templates\\TestMap.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
             testMap.Start();
