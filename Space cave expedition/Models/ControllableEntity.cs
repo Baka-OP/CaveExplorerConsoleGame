@@ -11,6 +11,9 @@ namespace Space_cave_expedition.Models
     /// </summary>
     abstract class ControllableEntity
     {
+        public int EntityHeight { get; private set; }
+        public int EntityWidth { get; private set; }
+
         #region Position methods and properties
         public event EntityPositionChanged PositionChanged;
         protected int _LeftPosition;
@@ -75,6 +78,8 @@ namespace Space_cave_expedition.Models
                     if (entityWidth != s.Length)
                         throw new Exception("Entity is not a rectangle or a square, please add whitespaces to make all lines equally long.");
                 }
+                EntityHeight = lines.Length;
+                EntityWidth = entityWidth;
                 _Appearance = value;
                 AppearanceChanged?.Invoke(this, new EntityAppearanceChangedArgs(value));
             }
@@ -85,7 +90,7 @@ namespace Space_cave_expedition.Models
         /// <param name="LeftPosition">Console.CursorLeft value, from which to start displaying.</param>
         /// <param name="TopPosition">Console.CursorTop value, from which to start displaying.</param>
         /// <param name="displayMethod">From where to start displaying the entity. If it is StartFromCenter, then xPosition and yPosition is the center of the entity.</param>
-        protected virtual void Display(int LeftPosition, int TopPosition, DisplayMethod displayMethod)
+        public virtual void Display(int LeftPosition, int TopPosition, DisplayMethod displayMethod)
         {
             Console.SetCursorPosition(LeftPosition, TopPosition);
             if(displayMethod == DisplayMethod.StartFromTopLeft)
@@ -93,7 +98,8 @@ namespace Space_cave_expedition.Models
                 string[] lines = Appearance.Split('\n');
                 foreach(string s in lines)
                 {
-                    Console.WriteLine(s);
+                    Console.Write(s);
+                    Console.SetCursorPosition(LeftPosition, Console.CursorTop + 1);
                 }
             }
             else if (displayMethod == DisplayMethod.StartFromCenter)
