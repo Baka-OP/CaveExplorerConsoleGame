@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Map Templates\TestMap.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

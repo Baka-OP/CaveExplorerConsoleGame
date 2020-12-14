@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 using Space_cave_expedition.Enums;
+using Space_cave_expedition.Helpers;
 
 namespace Space_cave_expedition.Models
 {
@@ -12,6 +13,7 @@ namespace Space_cave_expedition.Models
 
         public ConsoleColor MapBackgroundColor { get; private set; }
         public ConsoleColor MapForegroundColor { get; private set; }
+        public char[,] MapLayout { get; private set; }
         public string MapTemplate { get; private set; }
 
         private ControllableEntity _FocusedEntity;
@@ -38,12 +40,17 @@ namespace Space_cave_expedition.Models
         /// <param name="backgroundColor">Background color of the whole map.</param>
         /// <param name="wallColor">Colour of the layout for the map.</param>
         /// <param name="FocusedEntity">Entity which will be at the center of the screen.</param>
-        public Map(string mapTemplate, ConsoleColor backgroundColor, ConsoleColor wallColor, ControllableEntity FocusedEntity)
+        public Map(string mapTemplate, ConsoleColor backgroundColor, ConsoleColor wallColor, ControllableEntity focusedEntity)
         {
             MapForegroundColor = wallColor;
             MapBackgroundColor = backgroundColor;
+
             MapTemplate = mapTemplate;
-            this.FocusedEntity = FocusedEntity;
+            string[] lines = mapTemplate.Split('\n');
+            MapHeight = lines.Length;
+            MapWidth = Helper.GetLongestStringLength(lines);
+
+            FocusedEntity = focusedEntity;
             ListOfEntities = new List<ControllableEntity>();
             AddEntity(FocusedEntity);
             isStarted = false;
@@ -57,7 +64,7 @@ namespace Space_cave_expedition.Models
             ListOfEntities.Add(entity);
             entity.PositionChanged += EntityPositionChanged;
             if (isStarted)
-                entity.Display(entity.LeftPosition, entity.TopPosition, DisplayMethod.StartFromTopLeft);
+                entity.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
         }
         public void Start()
         {
@@ -65,32 +72,41 @@ namespace Space_cave_expedition.Models
             DisplayMap();
             isStarted = true;
         }
+
+        //Displaying methods
         private void DisplayMap()
         {
-            Console.WriteLine(MapTemplate);
-            DisplayAllEntities();
+            string[] lines = MapTemplate.Split('\n');
+            MapLayout = new char[MapWidth, MapHeight];
+            for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+            {
+                for (int charNumber = 0; charNumber < lines[lineNumber].Length; charNumber++)
+                {
+                    MapLayout[charNumber, lineNumber] = lines[lineNumber][charNumber];
+                }
+            }
+            AddEntitiesToMapLayout();
+
+            for(int i = 0; i < MapHeight; i++)
+            {
+                for(int j = 0; j < MapWidth; j++)
+                {
+                    Console.Write(MapLayout[j, i]);
+                }
+                Console.WriteLine();
+            }
         }
-        private void DisplayAllEntities()
+        private void AddEntitiesToMapLayout()
         {
             foreach(ControllableEntity e in ListOfEntities)
             {
-                e.Display(e.LeftPosition, e.TopPosition, DisplayMethod.StartFromTopLeft);
+                e.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
             }
         }
 
+        //Events
         private void EntityPositionChanged(object source, EntityPositionChangedArgs e)
         {
-            /*ControllableEntity sender = source as ControllableEntity;
-            Console.SetCursorPosition(e.PreviousPositionLeft, e.PreviousPositionTop);
-
-            for(int i = 0; i < sender.EntityHeight; i++)
-            {
-                Console.WriteLine("".PadRight(sender.EntityWidth));
-                Console.SetCursorPosition(e.PreviousPositionLeft, Console.CursorTop);
-            }
-
-            Console.SetCursorPosition(e.NewPositionLeft, e.NewPositionTop);
-            sender.Display(e.NewPositionLeft, e.NewPositionTop, DisplayMethod.StartFromTopLeft);*/
             Console.SetCursorPosition(0, 0);
             DisplayMap();
         }

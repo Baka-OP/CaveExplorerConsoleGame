@@ -16,42 +16,42 @@ namespace Space_cave_expedition.Models
 
         #region Position methods and properties
         public event EntityPositionChanged PositionChanged;
-        protected int _LeftPosition;
+        protected int _XPosition;
         /// <summary>
-        /// CursorLeft position of the entity, if the entity is multiple characters long, the topmost, leftmost, even if it is a whitespace, is returned
+        /// XPosition position of the entity, if the entity is multiple characters long, the leftmost position is returned, even if it might be a whitespace.
         /// </summary>
-        public int LeftPosition
+        public int XPosition
         {
             get
             {
-                return _LeftPosition;
+                return _XPosition;
             }
             protected set
             {
-                int previousLeft = _LeftPosition;
-                _LeftPosition = value;
-                PositionChanged?.Invoke(this, new EntityPositionChangedArgs(previousLeft, _TopPosition, _LeftPosition, _TopPosition));
+                int previousLeft = _XPosition;
+                _XPosition = value;
+                PositionChanged?.Invoke(this, new EntityPositionChangedArgs(previousLeft, _YPosition, _XPosition, _YPosition));
             }
         }
-        protected int _TopPosition;
+        protected int _YPosition;
         /// <summary>
-        /// CursorTop position of the entity, if the entity is multiple characters long, the topmost characters are chosen.
+        /// YPosition of the entity, if the entity is multiple characters long, the topmost position is chosen.
         /// </summary>
-        public int TopPosition
+        public int YPosition
         {
             get
             {
-                return _TopPosition;
+                return _YPosition;
             }
             protected set
             {
-                int previousTop = _TopPosition;
-                _TopPosition = value;
-                PositionChanged?.Invoke(this, new EntityPositionChangedArgs(LeftPosition, previousTop, _LeftPosition, _TopPosition));
+                int previousTop = _YPosition;
+                _YPosition = value;
+                PositionChanged?.Invoke(this, new EntityPositionChangedArgs(XPosition, previousTop, _XPosition, _YPosition));
             }
         }
         /// <summary>
-        /// Moves the entity in a specific direction.
+        /// Changes the entites TopPosition and LeftPosition based on the direction
         /// </summary>
         /// <param name="directionOfMovement">Direction of the movement.</param>
         public abstract void Move(PlayerMoveDirection directionOfMovement);
@@ -85,21 +85,57 @@ namespace Space_cave_expedition.Models
             }
         }
         /// <summary>
-        /// Displays the player inside a map.
+        /// Puts the entity inside the map.
         /// </summary>
         /// <param name="LeftPosition">Console.CursorLeft value, from which to start displaying.</param>
         /// <param name="TopPosition">Console.CursorTop value, from which to start displaying.</param>
         /// <param name="displayMethod">From where to start displaying the entity. If it is StartFromCenter, then xPosition and yPosition is the center of the entity.</param>
-        public virtual void Display(int LeftPosition, int TopPosition, DisplayMethod displayMethod)
+        public virtual void InsertIntoMap(char[,] mapLayout, int XPosition, int YPosition, DisplayMethod displayMethod)
         {
-            Console.SetCursorPosition(LeftPosition, TopPosition);
             if(displayMethod == DisplayMethod.StartFromTopLeft)
             {
                 string[] lines = Appearance.Split('\n');
-                foreach(string s in lines)
+                for (int line = 0; line < lines.Length; line++)
                 {
-                    Console.Write(s);
-                    Console.SetCursorPosition(LeftPosition, Console.CursorTop + 1);
+                    for(int character = 0; character < lines[line].Length; character++)
+                    {
+                        if (YPosition - line >= 0)
+                        {
+                            mapLayout[YPosition - line, XPosition + character] = lines[line][character];
+                        }
+                    }
+                }
+            }
+            else if (displayMethod == DisplayMethod.StartFromCenter)
+            {
+                //Starting from center is a bit harder to do, so I won't be making it for now. I don't even need it.
+                throw new NotImplementedException("Error. DisplayMethod has been set to StartFromCenter, but StartFromCenter has not yet been implemented.");
+            }
+            else
+            {
+                throw new ArgumentException("Error, displayMethod seems to have a value that has not been put into consideration yet.");
+            }
+        }
+        /// <summary>
+        /// Puts the entity inside the map, position based on the position of the entity.
+        /// </summary>
+        /// <param name="mapLayout"></param>
+        /// <param name="displayMethod"></param>
+        public virtual void InsertIntoMap(char[,] mapLayout, DisplayMethod displayMethod)
+        {
+            if (displayMethod == DisplayMethod.StartFromTopLeft)
+            {
+                string[] lines = Appearance.Split('\n');
+                for (int line = 0; line < lines.Length; line++)
+                {
+                    for (int character = 0; character < lines[line].Length; character++)
+                    {
+                        if (YPosition - line >= 0)
+                        {
+                            //You need to subtract line, because the character is displayed from top to bottom.
+                            mapLayout[XPosition + character, YPosition - line] = lines[line][character];
+                        }
+                    }
                 }
             }
             else if (displayMethod == DisplayMethod.StartFromCenter)
