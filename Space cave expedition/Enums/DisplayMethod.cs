@@ -7,7 +7,7 @@ namespace Space_cave_expedition.Enums
     /// <summary>
     /// Describes ways to display an entity.
     /// </summary>
-    enum DisplayMethod: Byte
+    public enum DisplayMethod: Byte
     {
         StartFromCenter, StartFromTopLeft
     }

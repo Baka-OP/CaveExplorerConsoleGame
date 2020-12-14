@@ -27,19 +27,19 @@ namespace Space_cave_expedition
                 {
                     case ConsoleKey.A:
                     case ConsoleKey.LeftArrow:
-                        player.Move(PlayerMoveDirection.Left);
+                        testMap.MoveEntity(player, PlayerMoveDirection.Left);
                         break;
                     case ConsoleKey.D:
                     case ConsoleKey.RightArrow:
-                        player.Move(PlayerMoveDirection.Right);
+                        testMap.MoveEntity(player, PlayerMoveDirection.Right);
                         break;
                     case ConsoleKey.W:
                     case ConsoleKey.UpArrow:
-                        player.Move(PlayerMoveDirection.Up);
+                        testMap.MoveEntity(player, PlayerMoveDirection.Up);
                         break;
                     case ConsoleKey.S:
                     case ConsoleKey.DownArrow:
-                        player.Move(PlayerMoveDirection.Down);
+                        testMap.MoveEntity(player, PlayerMoveDirection.Down);
                         break;
                 }
             }

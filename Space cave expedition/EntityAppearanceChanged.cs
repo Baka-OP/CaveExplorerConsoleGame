@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Space_cave_expedition
 {
-    class EntityAppearanceChangedArgs: EventArgs
+    public class EntityAppearanceChangedArgs: EventArgs
     {
         public string NewAppearance { get; private set; }
         public EntityAppearanceChangedArgs(string newAppearance)
@@ -12,5 +12,5 @@ namespace Space_cave_expedition
             NewAppearance = newAppearance;
         }
     }
-    delegate void EntityAppearanceChanged(object sender, EntityAppearanceChangedArgs e);
+    public delegate void EntityAppearanceChanged(object sender, EntityAppearanceChangedArgs e);
 }

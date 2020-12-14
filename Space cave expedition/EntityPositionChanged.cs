@@ -2,8 +2,8 @@
 
 namespace Space_cave_expedition
 {
-    delegate void EntityPositionChanged(object sender, EntityPositionChangedArgs e);
-    class EntityPositionChangedArgs: EventArgs
+    public delegate void EntityPositionChanged(object sender, EntityPositionChangedArgs e);
+    public class EntityPositionChangedArgs: EventArgs
     {
         public int PreviousPositionLeft { get; private set; }
         public int PreviousPositionTop { get; private set; }

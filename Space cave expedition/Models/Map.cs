@@ -55,26 +55,16 @@ namespace Space_cave_expedition.Models
             AddEntity(FocusedEntity);
             isStarted = false;
         }
-        /// <summary>
-        /// Adds an entity to the map.
-        /// </summary>
-        /// <param name="entity"></param>
-        public void AddEntity(ControllableEntity entity)
-        {
-            ListOfEntities.Add(entity);
-            entity.PositionChanged += EntityPositionChanged;
-            if (isStarted)
-                entity.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
-        }
         public void Start()
         {
             Console.Clear();
             DisplayMap();
             isStarted = true;
         }
-
-        //Displaying methods
-        private void DisplayMap()
+        /// <summary>
+        /// Updated the layout of the map, but doesn't display it.
+        /// </summary>
+        private void UpdateLayout()
         {
             string[] lines = MapTemplate.Split('\n');
             MapLayout = new char[MapWidth, MapHeight];
@@ -86,14 +76,20 @@ namespace Space_cave_expedition.Models
                 }
             }
             AddEntitiesToMapLayout();
+        }
 
+        //Displaying methods
+        private void DisplayMap()
+        {
+            UpdateLayout();
             for(int i = 0; i < MapHeight; i++)
             {
+                string line = "";
                 for(int j = 0; j < MapWidth; j++)
                 {
-                    Console.Write(MapLayout[j, i]);
+                    line += MapLayout[j, i];
                 }
-                Console.WriteLine();
+                Console.WriteLine(line);
             }
         }
         private void AddEntitiesToMapLayout()
@@ -101,6 +97,34 @@ namespace Space_cave_expedition.Models
             foreach(ControllableEntity e in ListOfEntities)
             {
                 e.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
+            }
+        }
+
+        //Entity manipulation
+        /// <summary>
+        /// Adds an entity to the map.
+        /// </summary>
+        /// <param name="entity"></param>
+        public void AddEntity(ControllableEntity entity)
+        {
+            ListOfEntities.Add(entity);
+            entity.PositionChanged += EntityPositionChanged;
+            if (isStarted)
+                entity.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
+        }
+
+        public void MoveEntity(ControllableEntity entity, PlayerMoveDirection movementDirection)
+        {
+            //Checking, whether the character is at the edge of the map.
+            if (movementDirection == PlayerMoveDirection.Up && entity.YPosition == 0 ||
+                movementDirection == PlayerMoveDirection.Down && entity.YPosition == MapHeight - 1 ||
+                movementDirection == PlayerMoveDirection.Left && entity.XPosition == 0 ||
+                movementDirection == PlayerMoveDirection.Right && entity.XPosition == MapWidth - 1)
+                return;
+
+            if(CollisionDetection.DetectCollision(MapLayout, entity, movementDirection))
+            {
+                entity.Move(movementDirection);
             }
         }
 

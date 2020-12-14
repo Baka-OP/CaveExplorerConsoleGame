@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Space_cave_expedition.Enums
 {
-    enum PlayerMoveDirection
+    public enum PlayerMoveDirection
     {
         Up, Down, Left, Right
     }

@@ -9,7 +9,7 @@ namespace Space_cave_expedition.Models
     /// <summary>
     /// A bot, player, or an object displayable on the map. Can only be inherited.
     /// </summary>
-    abstract class ControllableEntity
+    public abstract class ControllableEntity
     {
         public int EntityHeight { get; private set; }
         public int EntityWidth { get; private set; }
