@@ -141,13 +141,13 @@ namespace Space_cave_expedition.Models
         /// </summary>
         /// <param name="entity"></param>
         /// <param name="movementDirection"></param>
-        public void MoveEntity(ControllableEntity entity, PlayerMoveDirection movementDirection)
+        public void MoveEntity(ControllableEntity entity, EntityMoveDirection movementDirection)
         {
             //Checking, whether the character is at the edge of the map.
-            if (movementDirection == PlayerMoveDirection.Up && entity.YPosition == 0 ||
-                movementDirection == PlayerMoveDirection.Down && entity.YPosition == MapHeight - 1 ||
-                movementDirection == PlayerMoveDirection.Left && entity.XPosition == 0 ||
-                movementDirection == PlayerMoveDirection.Right && entity.XPosition == MapWidth - 1)
+            if (movementDirection == EntityMoveDirection.Up && entity.YPosition == 0 ||
+                movementDirection == EntityMoveDirection.Down && entity.YPosition == MapHeight - 1 ||
+                movementDirection == EntityMoveDirection.Left && entity.XPosition == 0 ||
+                movementDirection == EntityMoveDirection.Right && entity.XPosition == MapWidth - 1)
                 return;
 
             if(CollisionDetection.DetectCollision(MapLayout, entity, movementDirection))

@@ -54,7 +54,7 @@ namespace Space_cave_expedition.Models
         /// Changes the entites TopPosition and LeftPosition based on the direction
         /// </summary>
         /// <param name="directionOfMovement">Direction of the movement.</param>
-        public abstract void Move(PlayerMoveDirection directionOfMovement);
+        public abstract void Move(EntityMoveDirection directionOfMovement);
         #endregion
         #region Appearance methods and properties
         public event EntityAppearanceChanged AppearanceChanged;

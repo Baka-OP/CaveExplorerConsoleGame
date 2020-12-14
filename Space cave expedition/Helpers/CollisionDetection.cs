@@ -16,17 +16,17 @@ namespace Space_cave_expedition.Helpers
         /// <param name="entity"></param>
         /// <param name="movementDirection"></param>
         /// <returns></returns>
-        public static bool DetectCollision(char[,] MapLayout, ControllableEntity entity, PlayerMoveDirection movementDirection)
+        public static bool DetectCollision(char[,] MapLayout, ControllableEntity entity, EntityMoveDirection movementDirection)
         {
             switch (movementDirection)
             {
-                case PlayerMoveDirection.Up:
+                case EntityMoveDirection.Up:
                     return MapLayout[entity.XPosition, entity.YPosition - 1] == ' ';
-                case PlayerMoveDirection.Down:
+                case EntityMoveDirection.Down:
                     return MapLayout[entity.XPosition, entity.YPosition + 1] == ' ';
-                case PlayerMoveDirection.Left:
+                case EntityMoveDirection.Left:
                     return MapLayout[entity.XPosition - 1, entity.YPosition] == ' ';
-                case PlayerMoveDirection.Right:
+                case EntityMoveDirection.Right:
                     return MapLayout[entity.XPosition + 1, entity.YPosition] == ' ';
                 default:
                     throw new ArgumentException("Error, unexpected movement direction.");

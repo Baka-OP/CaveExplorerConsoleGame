@@ -7,24 +7,24 @@ namespace Space_cave_expedition.Models
 {
     class Player: ControllableEntity
     {
-        public override void Move(PlayerMoveDirection directionOfMovement)
+        public override void Move(EntityMoveDirection directionOfMovement)
         {
             switch (directionOfMovement)
             {
                 //No need to fire events, by changing Position and Appearance properties, the event fires automatically
-                case PlayerMoveDirection.Up:
+                case EntityMoveDirection.Up:
                     Appearance = "^";
                     YPosition--;
                     break;
-                case PlayerMoveDirection.Down:
+                case EntityMoveDirection.Down:
                     Appearance = "v";
                     YPosition++;
                     break;
-                case PlayerMoveDirection.Left:
+                case EntityMoveDirection.Left:
                     Appearance = "<";
                     XPosition--;
                     break;
-                case PlayerMoveDirection.Right:
+                case EntityMoveDirection.Right:
                     Appearance = ">";
                     XPosition++;
                     break;
