@@ -9,12 +9,27 @@ namespace Space_cave_expedition.Models
 {
     class Map
     {
+        #region Map Templates
+        /// <summary>
+        /// The template of the map, before any additional modifications -> a one long string.
+        /// </summary>
+        public string MapTemplate { get; private set; }
+        /// <summary>
+        /// The MapTemplate, but processed into a two-dimensional char array without any entities added yet. 
+        /// Preloaded on purpose because it doesn't change often and is often used, reducing rendering times.
+        /// </summary>
+        public char[,] MapLayoutTemplate { get; private set; }
+        /// <summary>
+        /// Complete MapLayout along with entities added in.
+        /// </summary>
+        public char[,] MapLayout { get; private set; }
+        #endregion
         #region Main map properties
 
         public ConsoleColor MapBackgroundColor { get; private set; }
         public ConsoleColor MapForegroundColor { get; private set; }
-        public char[,] MapLayout { get; private set; }
-        public string MapTemplate { get; private set; }
+
+
 
         private ControllableEntity _FocusedEntity;
         /// <summary>
@@ -29,7 +44,6 @@ namespace Space_cave_expedition.Models
         public int MapHeight { get; set; }
 
         #endregion
-
         private bool isStarted;
         List<ControllableEntity> ListOfEntities;
 
@@ -46,42 +60,33 @@ namespace Space_cave_expedition.Models
             MapBackgroundColor = backgroundColor;
 
             MapTemplate = mapTemplate;
-            string[] lines = mapTemplate.Split('\n');
-            MapHeight = lines.Length;
-            MapWidth = Helper.GetLongestStringLength(lines);
+            CreateMapLayoutTemplate();
 
             FocusedEntity = focusedEntity;
             ListOfEntities = new List<ControllableEntity>();
             AddEntity(FocusedEntity);
+
             isStarted = false;
         }
         public void Start()
         {
             Console.Clear();
+            UpdateLayout();
             DisplayMap();
             isStarted = true;
         }
+
+        #region Map layout management methods
         /// <summary>
         /// Updated the layout of the map, but doesn't display it.
         /// </summary>
         private void UpdateLayout()
         {
-            string[] lines = MapTemplate.Split('\n');
-            MapLayout = new char[MapWidth, MapHeight];
-            for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
-            {
-                for (int charNumber = 0; charNumber < lines[lineNumber].Length; charNumber++)
-                {
-                    MapLayout[charNumber, lineNumber] = lines[lineNumber][charNumber];
-                }
-            }
+            MapLayout = (char[,])MapLayoutTemplate.Clone();
             AddEntitiesToMapLayout();
         }
-
-        //Displaying methods
         private void DisplayMap()
         {
-            UpdateLayout();
             for(int i = 0; i < MapHeight; i++)
             {
                 string line = "";
@@ -99,6 +104,25 @@ namespace Space_cave_expedition.Models
                 e.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
             }
         }
+        private void CreateMapLayoutTemplate()
+        {
+            string[] lines = MapTemplate.Split('\n');
+            if (!isStarted)
+            {
+                MapHeight = lines.Length;
+                MapWidth = Helper.GetLongestStringLength(lines);
+            }
+
+            MapLayoutTemplate = new char[MapWidth, MapHeight];
+            for (int lineNumber = 0; lineNumber < lines.Length; lineNumber++)
+            {
+                for (int charNumber = 0; charNumber < lines[lineNumber].Length; charNumber++)
+                {
+                    MapLayoutTemplate[charNumber, lineNumber] = lines[lineNumber][charNumber];
+                }
+            }
+        }
+        #endregion
 
         //Entity manipulation
         /// <summary>
@@ -112,7 +136,11 @@ namespace Space_cave_expedition.Models
             if (isStarted)
                 entity.InsertIntoMap(MapLayout, DisplayMethod.StartFromTopLeft);
         }
-
+        /// <summary>
+        /// Moves an entity inside the map, needs to be inside the ListOfEntities list.
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="movementDirection"></param>
         public void MoveEntity(ControllableEntity entity, PlayerMoveDirection movementDirection)
         {
             //Checking, whether the character is at the edge of the map.
@@ -132,6 +160,7 @@ namespace Space_cave_expedition.Models
         private void EntityPositionChanged(object source, EntityPositionChangedArgs e)
         {
             Console.SetCursorPosition(0, 0);
+            UpdateLayout();
             DisplayMap();
         }
     }
