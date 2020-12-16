@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Space_cave_expedition.Models;
 
-namespace Space_cave_expedition.Models
+namespace Space_cave_expedition.LegacyModels
 {
     class Player: ControllableEntity
     {

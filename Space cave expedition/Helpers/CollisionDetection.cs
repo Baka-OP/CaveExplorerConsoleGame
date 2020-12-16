@@ -4,6 +4,7 @@ using System.Text;
 
 using Space_cave_expedition.Models;
 using Space_cave_expedition.Enums;
+using Space_cave_expedition.LegacyModels;
 
 namespace Space_cave_expedition.Helpers
 {

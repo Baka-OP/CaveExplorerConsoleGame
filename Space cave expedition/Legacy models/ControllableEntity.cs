@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 
 using Space_cave_expedition.Enums;
+using Space_cave_expedition.Models;
 
-namespace Space_cave_expedition.Models
+namespace Space_cave_expedition.LegacyModels
 {
     /// <summary>
     /// A bot, player, or an object displayable on the map. Can only be inherited.
@@ -57,7 +58,6 @@ namespace Space_cave_expedition.Models
         public abstract void Move(EntityMoveDirection directionOfMovement);
         #endregion
         #region Appearance methods and properties
-        public event EntityAppearanceChanged AppearanceChanged;
         protected string _Appearance;
         /// <summary>
         /// String containing the entities appearance.
@@ -81,7 +81,6 @@ namespace Space_cave_expedition.Models
                 EntityHeight = lines.Length;
                 EntityWidth = entityWidth;
                 _Appearance = value;
-                AppearanceChanged?.Invoke(this, new EntityAppearanceChangedArgs(value));
             }
         }
         /// <summary>

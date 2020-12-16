@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Space_cave_expedition.Models;
 using Space_cave_expedition.Enums;
+using Space_cave_expedition.LegacyModels;
 
 namespace Space_cave_expedition
 {
@@ -36,7 +37,7 @@ namespace Space_cave_expedition
             Console.WindowWidth = Console.LargestWindowWidth;
 
             Player player = new Player(0, 2);
-            Map testMap = new Map(File.ReadAllText(ProgramLocation + "\\Map Templates\\TestMap.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
+            LegacyMap testMap = new LegacyMap(File.ReadAllText(ProgramLocation + "\\Map layouts\\TestMap\\GrayTemplate.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
             testMap.Start();
 
             while (true)

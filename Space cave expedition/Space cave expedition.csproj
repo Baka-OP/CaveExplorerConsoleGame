@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Map Templates\TestMap.txt">
+    <Resource Include="Map layouts\TestMap\GrayTemplate.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Map layouts\TestMap\GrayTemplate.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
