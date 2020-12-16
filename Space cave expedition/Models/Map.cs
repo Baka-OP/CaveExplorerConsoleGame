@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 using Space_cave_expedition.Enums;
 using Space_cave_expedition.Helpers;
@@ -94,7 +95,8 @@ namespace Space_cave_expedition.Models
                 {
                     line += MapLayout[j, i];
                 }
-                Console.WriteLine(line);
+                Console.Write(line);
+                Console.SetCursorPosition(0, Console.CursorTop + 1);
             }
         }
         private void AddEntitiesToMapLayout()
@@ -149,6 +151,7 @@ namespace Space_cave_expedition.Models
                 movementDirection == EntityMoveDirection.Left && entity.XPosition == 0 ||
                 movementDirection == EntityMoveDirection.Right && entity.XPosition == MapWidth - 1)
                 return;
+
 
             if(CollisionDetection.DetectCollision(MapLayout, entity, movementDirection))
             {
