@@ -12,7 +12,7 @@ namespace Space_cave_expedition.Models
         public int MapHeight { get; private set; }
         public int MapWidth { get; private set; }
 
-        private List<MapTemplate> MapTemplates;
+        public List<MapTemplate> MapTemplates { get; private set; }
         public List<IEntity> ListOfEntities { get; private set; }
         public event Action<IEntity> EntityAdded;
 

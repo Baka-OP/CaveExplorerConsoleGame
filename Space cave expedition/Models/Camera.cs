@@ -112,16 +112,22 @@ namespace Space_cave_expedition.Models
             isInstantiated = false;
         }
 
-
-
-
         /// <summary>
         /// Completely displays the whole map.
         /// </summary>
         /// <remarks>Do not use this for displaying a lot of times at once, takes a lot of time to display (80-120ms).</remarks>
         public void DisplayMap()
         {
-
+            //Indicates the bottom most cursorTop, to which the camera can write.
+            int bottomMost = StartingCursorTop + Map.MapHeight -1;
+            
+            for(int i = bottomMost; i > 0; i--)
+            {
+                for(int j = 0; j < Map.MapWidth; j++)
+                {
+                    Console.Write(Map.MapTemplates[0].Template[j, i]);
+                }
+            }
         }
         public void Start()
         {
