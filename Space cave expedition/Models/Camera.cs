@@ -79,7 +79,22 @@ namespace Space_cave_expedition.Models
 
         private void OnEntityPositionChanged(object sender, EntityPositionChangedArgs e)
         {
-            throw new NotImplementedException();
+            int bottomMost = StartingCursorTop + Map.MapHeight - 1;
+            //TODO: Make camera be able to handle two entities in the same position (bug during placement or anything), instead of just putting a whitespace
+            IEntity entity = sender as IEntity;
+            List<Coordinate> previousCoordinates = entity.AffectedPositions(e.PreviousX, e.PreviousY);
+            foreach(Coordinate c in previousCoordinates)
+            {
+                Console.SetCursorPosition(c.X + StartingCursorLeft, bottomMost - c.Y);
+                Console.Write(' ');
+            }
+
+            List<Coordinate> newCoordinates = entity.AffectedPositions();
+            foreach(Coordinate c in newCoordinates)
+            {
+                Console.SetCursorPosition(c.X + StartingCursorLeft, bottomMost - c.Y);
+                Console.Write(c.Content);
+            }
         }
 
         private void OnEntityDestroying(IEntity obj)
@@ -113,19 +128,43 @@ namespace Space_cave_expedition.Models
         }
 
         /// <summary>
-        /// Completely displays the whole map.
+        /// Completely displays the whole map. If the camera isn't started, starts it automatically.
         /// </summary>
         /// <remarks>Do not use this for displaying a lot of times at once, takes a lot of time to display (80-120ms).</remarks>
         public void DisplayMap()
         {
+            if (!IsStarted)
+                Start();
+
             //Indicates the bottom most cursorTop, to which the camera can write.
             int bottomMost = StartingCursorTop + Map.MapHeight -1;
             
-            for(int i = bottomMost; i > 0; i--)
+            //Display all templates with their specific colours.
+            foreach(MapTemplate mp in Map.MapTemplates)
             {
-                for(int j = 0; j < Map.MapWidth; j++)
+                Console.ForegroundColor = mp.Color;
+                for(int i = 0; i < mp.MapHeight; i++)
                 {
-                    Console.Write(Map.MapTemplates[0].Template[j, i]);
+                    for(int j = 0; j < mp.MapWidth; j++)
+                    {
+                        if(mp.Template[j, i] != ' ')
+                        {
+                            Console.SetCursorPosition(j + StartingCursorLeft, i + StartingCursorTop);
+                            Console.Write(mp.Template[j, i]);
+                        }
+                    }
+                    Console.WriteLine();
+                }
+            }
+            Console.ForegroundColor = ConsoleColor.Gray;
+            //Display all of the entities
+            foreach(IEntity e in Map.ListOfEntities)
+            {
+                List<Coordinate> positions = e.AffectedPositions();
+                foreach(Coordinate position in positions)
+                {
+                    Console.SetCursorPosition(position.X + StartingCursorLeft, bottomMost - position.Y);
+                    Console.Write(position.Content);
                 }
             }
         }

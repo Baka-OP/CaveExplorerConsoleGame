@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using Space_cave_expedition.Models;
 using Space_cave_expedition.Enums;
-using Space_cave_expedition.LegacyModels;
+using Space_cave_expedition.Interfaces;
 
 namespace Space_cave_expedition
 {
@@ -36,10 +36,15 @@ namespace Space_cave_expedition
             Console.WindowHeight = Console.LargestWindowHeight;
             Console.WindowWidth = Console.LargestWindowWidth;
 
-            Player player = new Player(0, 2);
-            LegacyMap testMap = new LegacyMap(File.ReadAllText(ProgramLocation + "\\Map layouts\\TestMap\\GrayTemplate.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
-            testMap.Start();
 
+            Player player = new Player(2, 2);
+            //LegacyMap testMap = new LegacyMap(File.ReadAllText(ProgramLocation + "\\Map layouts\\TestMap\\GrayTemplate.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
+            //testMap.Start();
+            Map testMap = new Map(ProgramLocation + "\\Map layouts\\TestMap");
+            Camera c = new Camera(0, 0, testMap);
+            c.FocusedEntity = player;
+            testMap.AddEntity(player);
+            c.DisplayMap();
             while (true)
             {
                 ConsoleKey pressedKey = Console.ReadKey(true).Key;
@@ -62,7 +67,11 @@ namespace Space_cave_expedition
                         testMap.MoveEntity(player, EntityMoveDirection.Down);
                         break;
                 }
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.SetCursorPosition(0, 20);
+                Console.WriteLine((player.XPosition + "," + player.YPosition).PadRight(10));
             }
+
         }
     }
 }

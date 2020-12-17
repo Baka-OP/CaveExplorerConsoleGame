@@ -4,34 +4,45 @@ using System.Text;
 
 using Space_cave_expedition.Models;
 using Space_cave_expedition.Enums;
-using Space_cave_expedition.LegacyModels;
 
 namespace Space_cave_expedition.Helpers
 {
-    public class CollisionDetection
+    public static class CollisionDetection
     {
         /// <summary>
-        /// Returns, whether the entity can move in a specific direction.
-        /// Use only for entities of size 1x1 that move by one field at a time!
+        /// Detects collision for objects that are of size 1x1 and move one field at a time.
         /// </summary>
-        /// <param name="entity"></param>
-        /// <param name="movementDirection"></param>
-        /// <returns></returns>
-        public static bool DetectCollision(char[,] MapLayout, ControllableEntity entity, EntityMoveDirection movementDirection)
+        /// <returns>Whether the Entity can move or not</returns>
+        /// <param name="map">Map in which the entity is contained.</param>
+        /// <param name="movementDirection">Direction to which the entity is going to move to.</param>
+        /// <param name="xPosition">X coordinate of the entity</param>
+        /// <param name="yPosition">Y coordinate of the entity</param>
+        public static bool DetectCollision1X1(Map map, EntityMoveDirection movementDirection, int xPosition, int yPosition)
         {
-            switch (movementDirection)
+            foreach(MapTemplate mt in map.MapTemplates)
             {
-                case EntityMoveDirection.Up:
-                    return MapLayout[entity.XPosition, entity.YPosition - 1] == ' ';
-                case EntityMoveDirection.Down:
-                    return MapLayout[entity.XPosition, entity.YPosition + 1] == ' ';
-                case EntityMoveDirection.Left:
-                    return MapLayout[entity.XPosition - 1, entity.YPosition] == ' ';
-                case EntityMoveDirection.Right:
-                    return MapLayout[entity.XPosition + 1, entity.YPosition] == ' ';
-                default:
-                    throw new ArgumentException("Error, unexpected movement direction.");
+                switch (movementDirection)
+                {
+                    //First the collision detector checks whether the player is about to move out of the map,
+                    case EntityMoveDirection.Up:
+                        if (yPosition + 1 == mt.MapHeight || mt.Template[xPosition, mt.MapHeight - yPosition - 2] != ' ')
+                            return false;
+                        break;
+                    case EntityMoveDirection.Down:
+                        if (yPosition == 0 || mt.Template[xPosition, mt.MapHeight - yPosition] != ' ')
+                            return false;
+                        break;
+                    case EntityMoveDirection.Left:
+                        if (xPosition - 1 == mt.MapWidth || mt.Template[xPosition - 1, mt.MapHeight - yPosition - 1] != ' ')
+                            return false;
+                        break;
+                    case EntityMoveDirection.Right:
+                        if (xPosition + 1 == mt.MapWidth || mt.Template[xPosition + 1, mt.MapHeight - yPosition - 1] != ' ')
+                            return false;
+                        break;
+                }
             }
+            return true;
         }
     }
 }
