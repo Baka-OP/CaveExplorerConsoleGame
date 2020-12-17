@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 
 using Space_cave_expedition.Interfaces;
+using Space_cave_expedition.Models;
 
-namespace Space_cave_expedition.Models
+namespace Space_cave_expedition.Graphic_Components
 {
-    class Camera
+    public class Camera
     {
         public static Camera CameraInstance;
         /// <summary>
@@ -168,13 +169,21 @@ namespace Space_cave_expedition.Models
                 }
             }
         }
+        /// <summary>
+        /// Makes the camera listen to entity events and starts displaying the map.
+        /// </summary>
         public void Start()
         {
             IsStarted = true;
+            DisplayMap();
         }
+        /// <summary>
+        /// Stops the camera and clears the console.
+        /// </summary>
         public void Stop()
         {
             IsStarted = false;
+            Console.Clear();
         }
     }
 }

@@ -7,41 +7,24 @@ using System.Collections.Generic;
 using Space_cave_expedition.Models;
 using Space_cave_expedition.Enums;
 using Space_cave_expedition.Interfaces;
+using Space_cave_expedition.Graphic_Components;
 
 namespace Space_cave_expedition
 {
     class Program
     {
-        /// <summary>
-        /// If the player resizes the console, the cursor becomes visible again, this will make it invisible again every 1 second. Run this on a paralel thread, or else the whole main thread will be blocked by thread.sleep.
-        /// </summary>
-        static void CursorVisibilitySetter()
-        {
-            while (true)
-            {
-                Console.CursorVisible = false;
-                Thread.Sleep(1000);
-            }
-        }
-
         static readonly string ProgramLocation = Environment.CurrentDirectory;
         static void Main()
         {
-            ThreadStart CursorVisibilitySetterMethod = CursorVisibilitySetter;
-            Thread CursorVisibilitySetterThread = new Thread(CursorVisibilitySetterMethod);
-            CursorVisibilitySetterThread.Start();
-
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
-            Console.WindowHeight = Console.LargestWindowHeight;
-            Console.WindowWidth = Console.LargestWindowWidth;
 
+            MainMenu mainMenu = new MainMenu();
 
+            /*
             Player player = new Player(2, 2);
-            //LegacyMap testMap = new LegacyMap(File.ReadAllText(ProgramLocation + "\\Map layouts\\TestMap\\GrayTemplate.txt"), ConsoleColor.Black, ConsoleColor.Gray, player);
-            //testMap.Start();
             Map testMap = new Map(ProgramLocation + "\\Map layouts\\TestMap");
-            Camera c = new Camera(0, 0, testMap);
+            Camera c = new Camera(4, 2, testMap);
             c.FocusedEntity = player;
             testMap.AddEntity(player);
             c.DisplayMap();
@@ -71,7 +54,7 @@ namespace Space_cave_expedition
                 Console.SetCursorPosition(0, 20);
                 Console.WriteLine((player.XPosition + "," + player.YPosition).PadRight(10));
             }
-
+            */
         }
     }
 }
