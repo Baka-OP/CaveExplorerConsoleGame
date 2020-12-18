@@ -18,9 +18,7 @@ namespace Space_cave_expedition
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
-
-            MainMenu mainMenu = new MainMenu();
-
+            new MainMenu();
             /*
             Player player = new Player(2, 2);
             Map testMap = new Map(ProgramLocation + "\\Map layouts\\TestMap");

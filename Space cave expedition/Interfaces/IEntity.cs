@@ -42,18 +42,6 @@ namespace Space_cave_expedition.Interfaces
         /// <param name="yPosition"></param>
         /// <returns></returns>
         public List<Coordinate> AffectedPositions(int xPosition, int yPosition);
-        ///// <summary>
-        /// Inserts an entity into a 2-dimensional char array according to the xPosition and yPosition properties.
-        /// </summary>
-        /// <param name="map">Map to insert the entity into</param>
-        //public void InsertIntoMap(char[,] map);
-        ///// <summary>
-        /// Inserts an entity into a 2-dimensional char array according to specified coordinates.
-        /// </summary>
-        /// <param name="map">Map to insert the entity into</param>
-        /// <param name="xPosition"></param>
-        /// <param name="yPosition"></param>
-        //public void InsertIntoMap(char[,] map, int xPosition, int yPosition);
         /// <summary>
         /// Activates when an entities position changes.
         /// </summary>
