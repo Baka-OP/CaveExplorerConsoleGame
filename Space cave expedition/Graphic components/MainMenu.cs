@@ -29,9 +29,8 @@ namespace Space_cave_expedition.Graphic_Components
             Thread t = new Thread(ts);
             t.Start();
 
-            CurrentSection = MainMenuSection.MainMenu;
             Console.SetWindowSize(60, 20);
-            DisplayMainMenu();
+            CurrentSection = MainMenuSection.MainMenu;
         }
         /// <summary>
         /// Makes sure CursorVisibility always has its desired value, be it true or false.
@@ -50,7 +49,7 @@ namespace Space_cave_expedition.Graphic_Components
             switch (CurrentSection)
             {
                 case MainMenuSection.MainMenu:
-
+                    DisplayMainMenu();
                     break;
                 default:
                     throw new ArgumentException("Unexpected MainMenuSection.");
@@ -71,27 +70,23 @@ namespace Space_cave_expedition.Graphic_Components
             Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
 
             //Title text
-            int quarterOfScreen = Console.WindowHeight / 4;
-            FillALine('=', 1, quarterOfScreen);
-            WriteInCenter("Space cave exploration", quarterOfScreen / 2);
+            FillALine('=', 1, Console.WindowHeight / 4);
+            WriteInCenter("Space cave exploration", (Console.WindowHeight / 4) / 2);
+
+            //I want the positions of each to be on specific eights of the screen
+            //New game = 3 eights
+            //Editor = 4 eights (1 half)
+            //Settings = 5 eights
+            //Thus, I calculated the distance between them.
 
 
-            //Play text
-            double threeEights = Math.Ceiling((double)Console.WindowHeight / 8 * 3);
-            WriteInCenter("New game", (int)threeEights);
+            int difference = Console.WindowHeight / 2 - (int)Math.Ceiling(Console.WindowHeight / 8 * 3.0) - 2;
+            Console.SetCursorPosition(0, Console.CursorTop + difference + 1);
 
-            int difference = 
-
-            //Editor
-            WriteInCenter("Editor", Console.WindowHeight / 2);
-
-            //Settings
-            double fiveEights = Math.Ceiling((double)Console.WindowHeight / 8 * 5);
-            WriteInCenter("Settings", (int)fiveEights);
-
-            //Exit
-            double threeQuarters = Math.Ceiling((double)Console.WindowHeight / 4 * 3);
-            WriteInCenter("Exit", (int)threeQuarters);
+            WriteInCenter("New game", Console.CursorTop + difference);
+            WriteInCenter("Editor", Console.CursorTop + difference);
+            WriteInCenter("Settings", Console.CursorTop + difference);
+            WriteInCenter("Exit", Console.CursorTop + difference);
         }
 
 
