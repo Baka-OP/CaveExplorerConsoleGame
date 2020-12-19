@@ -6,7 +6,7 @@ namespace Space_cave_expedition.Enums
 {
     public enum MainMenuSection
     {
-        MainMenu, EditorMenu, Editor,
+        MainMenu, Settings, EditorMenu, Editor,
         MapSelection, Map
     }
 }

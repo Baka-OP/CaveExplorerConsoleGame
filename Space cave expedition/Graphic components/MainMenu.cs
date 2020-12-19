@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Text;
 
 using Space_cave_expedition.Enums;
+using Space_cave_expedition.Helpers;
 
 namespace Space_cave_expedition.Graphic_Components
 {
     public class MainMenu
     {
         public static MainMenu Instance;
-
+        private bool keepConsoleSizeMonitorerRunning;
         #region CursorPositions
         int currentCursorIndex;
         int CursorIndexLimit
@@ -51,18 +52,17 @@ namespace Space_cave_expedition.Graphic_Components
         /// </summary>
         private void ConsoleSizeMonitorer()
         {
-            while (true)
+            while (keepConsoleSizeMonitorerRunning)
             {
                 int windowHeight = Console.WindowHeight;
                 int windowWidth = Console.WindowWidth;
                 Console.CursorVisible = cursorVisibility;
-                Thread.Sleep(40);
+                Thread.Sleep(30);
                 if(windowHeight != Console.WindowHeight || windowWidth != Console.WindowWidth)
                 {
                     Console.Clear();
                     Thread.Sleep(400);
                     DisplayMenu();
-                    continue;
                 }
             }
         }
@@ -72,6 +72,7 @@ namespace Space_cave_expedition.Graphic_Components
         /// </summary>
         public MainMenu()
         {
+            keepConsoleSizeMonitorerRunning = true;
             cursorVisibility = false;
             ThreadStart ts = new ThreadStart(ConsoleSizeMonitorer);
             Thread t = new Thread(ts);
@@ -90,17 +91,39 @@ namespace Space_cave_expedition.Graphic_Components
 
                 switch (pressedKey)
                 {
+                    case ConsoleKey.W:
                     case ConsoleKey.UpArrow:
                         if (currentCursorIndex > 0)
                             currentCursorIndex--;
                         DisplayMenu();
                         break;
+                    case ConsoleKey.S:
                     case ConsoleKey.DownArrow:
                         if (currentCursorIndex < CursorIndexLimit)
                             currentCursorIndex++;
                         DisplayMenu();
                         break;
-
+                    case ConsoleKey.Enter:
+                        if(CurrentSection == MainMenuSection.MainMenu)
+                        {
+                            switch (currentCursorIndex)
+                            {
+                                case 0:
+                                    CurrentSection = MainMenuSection.MapSelection;
+                                    break;
+                                case 1:
+                                    CurrentSection = MainMenuSection.Editor;
+                                    break;
+                                case 2:
+                                    CurrentSection = MainMenuSection.Settings;
+                                    break;
+                                case 3:
+                                    keepConsoleSizeMonitorerRunning = false;
+                                    Console.Clear();
+                                    return;
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -121,9 +144,9 @@ namespace Space_cave_expedition.Graphic_Components
         //Section displays
         private void DisplayMainMenu()
         {
-            //Making the edges
+            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
             FillALine('=', 1);
-            for (int i = 0; i < Console.WindowHeight - 2; i++)
+            for (int i = 0; i < Console.WindowHeight - 3; i++)
             {
                 MakeEdges('|');
             }
