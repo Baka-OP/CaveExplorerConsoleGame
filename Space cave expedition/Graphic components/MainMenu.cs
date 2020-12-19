@@ -80,6 +80,7 @@ namespace Space_cave_expedition.Graphic_Components
 
             Console.SetWindowSize(60, 20);
             Console.BufferHeight = 21;
+            Console.BufferWidth = 61;
             CurrentSection = MainMenuSection.MainMenu;
             ConsoleHook.DisableAllResizingControl();
             WaitForInput();
@@ -274,6 +275,20 @@ namespace Space_cave_expedition.Graphic_Components
             Console.WriteLine(text);
             Console.ForegroundColor = previousForeground;
             Console.BackgroundColor = previousBackground;
+        }
+
+        private void DisplayTitle()
+        {
+            
+            string titleText2 = @"/‾‾    /‾‾‾\   /‾‾‾\   /‾‾‾    /‾‾  " +
+                                @"\__    |___/   |   |   |       |" +
+                                @"   \   |       |‾‾‾|   |       |‾‾ " +
+                                @" __/   |       |   |   \___    \__ " +
+                                @"" +
+                                @"" +
+                                @"" +
+                                @"";
+
         }
     }
 }
