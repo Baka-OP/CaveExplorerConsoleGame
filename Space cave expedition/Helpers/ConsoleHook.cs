@@ -7,6 +7,40 @@ namespace Space_cave_expedition.Helpers
 {
     public static class ConsoleHook
     {
+        public static void DisableAllResizingControl()
+        {
+            var window = GetConsoleWindow();
+            var systemMenu = GetSystemMenu(window, false);
+            DeleteMenu(systemMenu, ScClose, MfByCommand);
+            DeleteMenu(systemMenu, ScMinimize, MfByCommand);
+            DeleteMenu(systemMenu, ScMaximize, MfByCommand);
+            DeleteMenu(systemMenu, ScSize, MfByCommand);
+        }
+
+        public static void SetConsoleFont(string fontName, short size)
+        {
+            unsafe
+            {
+                var hnd = GetStdHandle(StdHandle.OutputHandle);
+                if (hnd != InvalidHandleValue)
+                {
+                    var info = new CONSOLE_FONT_INFO_EX();
+                    info.cbSize = (uint)Marshal.SizeOf(info);
+
+                    // Set console font to Lucida Console.
+                    var newInfo = new CONSOLE_FONT_INFO_EX();
+                    newInfo.cbSize = (uint)Marshal.SizeOf(newInfo);
+                    newInfo.FontFamily = TmpfTrueType;
+                    IntPtr ptr = new IntPtr(newInfo.FaceName);
+                    Marshal.Copy(fontName.ToCharArray(), 0, ptr, fontName.Length);
+
+                    // Get some settings from current font.
+                    newInfo.dwFontSize = new COORD(info.dwFontSize.X, size);
+                    SetCurrentConsoleFontEx(hnd, false, ref newInfo);
+                }
+            }
+        }
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         private unsafe struct CONSOLE_FONT_INFO_EX
         {
@@ -47,50 +81,19 @@ namespace Space_cave_expedition.Helpers
         [DllImport("kernel32")]
         private static extern IntPtr GetStdHandle(StdHandle index);
 
+        [DllImport("kernel32.dll", ExactSpelling = true)]
+        private static extern IntPtr GetConsoleWindow();
+
         [DllImport("user32")]
         private static extern IntPtr GetSystemMenu(IntPtr handle, bool revert);
 
         [DllImport("user32")]
         private static extern IntPtr DeleteMenu(IntPtr handle, int position, int flags);
 
-        //(ByVal hMenu As IntPtr, ByVal nPosition As Integer, ByVal wFlags As Integer)
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool SetCurrentConsoleFontEx(
+        [DllImport("kernel32", SetLastError = true)]
+        private static extern bool SetCurrentConsoleFontEx(
             IntPtr consoleOutput,
             bool maximumWindow,
             ref CONSOLE_FONT_INFO_EX consoleCurrentFontEx);
-
-        public static void DisableAllResizingControl()
-        {
-            var handle = GetStdHandle(StdHandle.OutputHandle);
-            var systemMenu = GetSystemMenu(handle, false);
-            DeleteMenu(systemMenu, ScClose, MfByCommand);
-            // TODO
-        }
-
-        public static void SetConsoleFont(string fontName, short size)
-        {
-            unsafe
-            {
-                var hnd = GetStdHandle(StdHandle.OutputHandle);
-                if (hnd != InvalidHandleValue)
-                {
-                    var info = new CONSOLE_FONT_INFO_EX();
-                    info.cbSize = (uint)Marshal.SizeOf(info);
-
-                    // Set console font to Lucida Console.
-                    var newInfo = new CONSOLE_FONT_INFO_EX();
-                    newInfo.cbSize = (uint)Marshal.SizeOf(newInfo);
-                    newInfo.FontFamily = TmpfTrueType;
-                    IntPtr ptr = new IntPtr(newInfo.FaceName);
-                    Marshal.Copy(fontName.ToCharArray(), 0, ptr, fontName.Length);
-
-                    // Get some settings from current font.
-                    newInfo.dwFontSize = new COORD(info.dwFontSize.X, size);
-                    SetCurrentConsoleFontEx(hnd, false, ref newInfo);
-                }
-            }
-        }
     }
 }

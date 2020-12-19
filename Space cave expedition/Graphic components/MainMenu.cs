@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 using System.Collections.Generic;
-using System.Text;
 
 using Space_cave_expedition.Enums;
 using Space_cave_expedition.Helpers;
@@ -81,6 +81,7 @@ namespace Space_cave_expedition.Graphic_Components
             Console.SetWindowSize(60, 20);
             Console.BufferHeight = 21;
             CurrentSection = MainMenuSection.MainMenu;
+            ConsoleHook.DisableAllResizingControl();
             WaitForInput();
         }
         private void WaitForInput()
@@ -157,45 +158,40 @@ namespace Space_cave_expedition.Graphic_Components
             FillALine('=', 1, Console.WindowHeight / 4);
             WriteInCenter("Space cave exploration", (Console.WindowHeight / 4) / 2);
 
-            //I want the positions of each to be on specific eights of the screen
-            //Play = 3 eights
-            //Editor = 4 eights (1 half)
-            //Settings = 5 eights
-            //Thus, I calculated the distance between them.
-            int difference = Console.WindowHeight / 2 - (int)Math.Ceiling(Console.WindowHeight / 8 * 3.0) - 2;
             ConsoleColor background;
-            Console.SetCursorPosition(0, Console.CursorTop + difference + 1);
 
             if (currentCursorIndex == 0)
                 background = ConsoleColor.Blue;
             else
                 background = ConsoleColor.Black;
-            playPosition = Console.CursorTop + difference;
+            playPosition = 7;
             WriteInCenter("Play", playPosition, ConsoleColor.Gray, background);
 
             if (currentCursorIndex == 1)
                 background = ConsoleColor.Blue;
             else
                 background = ConsoleColor.Black;
-            editorPosition = Console.CursorTop + difference;
+            editorPosition = 10;
             WriteInCenter("Editor", editorPosition, ConsoleColor.Gray, background);
 
             if (currentCursorIndex == 2)
                 background = ConsoleColor.Blue;
             else
                 background = ConsoleColor.Black;
-            settingsPosition = Console.CursorTop + difference;
+            settingsPosition = 13;
             WriteInCenter("Settings", settingsPosition, ConsoleColor.Gray, background);
 
             if (currentCursorIndex == 3)
                 background = ConsoleColor.Blue;
             else
                 background = ConsoleColor.Black;
-            exitPosition = Console.CursorTop + difference;
+            exitPosition = 16;
             WriteInCenter("Exit", exitPosition, ConsoleColor.Gray, background);
-            Console.SetCursorPosition(0, 0);
-        }
 
+        }
+        private void DisplayPlay()
+        {
+        }
 
 
         //Displaying helper methods
