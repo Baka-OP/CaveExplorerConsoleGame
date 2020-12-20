@@ -25,18 +25,11 @@ namespace Space_cave_expedition.Graphic_Components
                     throw new ArgumentException("Unexpected MainMenuSection.");
             }
         }
+
         //Section displays
         private void DisplayMainMenu()
         {
-            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
-            FillALine('=', 1);
-            for (int i = 0; i < Console.WindowHeight - 3; i++)
-            {
-                MakeEdges('|');
-            }
-            FillALine('=', 1);
-            Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
-
+            MakeFrame();
             //Title text
             DisplayTitle();
             FillALine('=', 1, 13);
@@ -73,8 +66,10 @@ namespace Space_cave_expedition.Graphic_Components
         }
         private void DisplayPlay()
         {
-        }
+            MakeFrame();
 
+
+        }
 
         #endregion
         #region CursorPositions
@@ -244,11 +239,24 @@ namespace Space_cave_expedition.Graphic_Components
             Console.ForegroundColor = foreground;
             Console.BackgroundColor = background;
             Console.SetCursorPosition(0, startingTop);
-            int padding = (Console.WindowWidth / 2) - (text.Length / 2);
+            int padding = (int)Math.Round((Console.WindowWidth / 2.0) - (text.Length / 2.0));
             Console.SetCursorPosition(padding, startingTop);
             Console.WriteLine(text);
             Console.ForegroundColor = previousForeground;
             Console.BackgroundColor = previousBackground;
+        }
+        /// <summary>
+        /// Fills all of the edges of the main menu with = and |
+        /// </summary>
+        private void MakeFrame()
+        {
+            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
+            FillALine('=', 1);
+            for (int i = 0; i < Console.WindowHeight - 3; i++)
+            {
+                MakeEdges('|');
+            }
+            FillALine('=', 1);
         }
 
         private void DisplayTitle(int startingTop = 1)
