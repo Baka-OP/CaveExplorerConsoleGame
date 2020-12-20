@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Space_cave_expedition.Enums;
@@ -10,8 +11,72 @@ namespace Space_cave_expedition.Graphic_Components
 {
     public class MainMenu
     {
-        public static MainMenu Instance;
-        private bool keepConsoleSizeMonitorerRunning;
+        #region Section displaying and manipulation
+
+        public void DisplayMenu()
+        {
+            Console.SetCursorPosition(0, 0);
+            switch (CurrentSection)
+            {
+                case MainMenuSection.MainMenu:
+                    DisplayMainMenu();
+                    break;
+                default:
+                    throw new ArgumentException("Unexpected MainMenuSection.");
+            }
+        }
+        //Section displays
+        private void DisplayMainMenu()
+        {
+            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
+            FillALine('=', 1);
+            for (int i = 0; i < Console.WindowHeight - 3; i++)
+            {
+                MakeEdges('|');
+            }
+            FillALine('=', 1);
+            Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
+
+            //Title text
+            DisplayTitle();
+            FillALine('=', 1, 13);
+
+            ConsoleColor background;
+
+            if (currentCursorIndex == 0)
+                background = ConsoleColor.Blue;
+            else
+                background = ConsoleColor.Black;
+            playPosition = 15;
+            WriteInCenter("Play", playPosition, ConsoleColor.Gray, background);
+
+            if (currentCursorIndex == 1)
+                background = ConsoleColor.Blue;
+            else
+                background = ConsoleColor.Black;
+            editorPosition = 18;
+            WriteInCenter("Editor", editorPosition, ConsoleColor.Gray, background);
+
+            if (currentCursorIndex == 2)
+                background = ConsoleColor.Blue;
+            else
+                background = ConsoleColor.Black;
+            settingsPosition = 21;
+            WriteInCenter("Settings", settingsPosition, ConsoleColor.Gray, background);
+
+            if (currentCursorIndex == 3)
+                background = ConsoleColor.Blue;
+            else
+                background = ConsoleColor.Black;
+            exitPosition = 24;
+            WriteInCenter("Exit", exitPosition, ConsoleColor.Gray, background);
+        }
+        private void DisplayPlay()
+        {
+        }
+
+
+        #endregion
         #region CursorPositions
         int currentCursorIndex;
         int CursorIndexLimit
@@ -38,51 +103,25 @@ namespace Space_cave_expedition.Graphic_Components
 
 
         #endregion
-
-        private bool cursorVisibility;
         private MainMenuSection _CurrentSection;
         public MainMenuSection CurrentSection
         {
             get { return _CurrentSection; }
             set { _CurrentSection = value; DisplayMenu(); }
         }
-
-        /// <summary>
-        /// Makes sure CursorVisibility always has its desired value, be it true or false.
-        /// </summary>
-        private void ConsoleSizeMonitorer()
-        {
-            while (keepConsoleSizeMonitorerRunning)
-            {
-                int windowHeight = Console.WindowHeight;
-                int windowWidth = Console.WindowWidth;
-                Console.CursorVisible = cursorVisibility;
-                Thread.Sleep(30);
-                if(windowHeight != Console.WindowHeight || windowWidth != Console.WindowWidth)
-                {
-                    Console.Clear();
-                    Thread.Sleep(400);
-                    DisplayMenu();
-                }
-            }
-        }
-
+                
         /// <summary>
         /// Creates an instance of a main menu and displays it.
         /// </summary>
         public MainMenu()
-        {
-            keepConsoleSizeMonitorerRunning = true;
-            cursorVisibility = false;
-            ThreadStart ts = new ThreadStart(ConsoleSizeMonitorer);
-            Thread t = new Thread(ts);
-            t.Start();
-
-            Console.SetWindowSize(60, 20);
-            Console.BufferHeight = 21;
+        {            
+            Console.SetWindowSize(60, 28);
+            Console.BufferHeight = 29;
             Console.BufferWidth = 61;
+            Console.CursorVisible = false;
             CurrentSection = MainMenuSection.MainMenu;
             ConsoleHook.DisableAllResizingControl();
+            
             WaitForInput();
         }
         private void WaitForInput()
@@ -120,7 +159,6 @@ namespace Space_cave_expedition.Graphic_Components
                                     CurrentSection = MainMenuSection.Settings;
                                     break;
                                 case 3:
-                                    keepConsoleSizeMonitorerRunning = false;
                                     Console.Clear();
                                     return;
                             }
@@ -128,70 +166,6 @@ namespace Space_cave_expedition.Graphic_Components
                         break;
                 }
             }
-        }
-
-        public void DisplayMenu()
-        {
-            Console.SetCursorPosition(0, 0);
-            switch (CurrentSection)
-            {
-                case MainMenuSection.MainMenu:
-                    DisplayMainMenu();
-                    break;
-                default:
-                    throw new ArgumentException("Unexpected MainMenuSection.");
-            }
-        }
-
-        //Section displays
-        private void DisplayMainMenu()
-        {
-            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
-            FillALine('=', 1);
-            for (int i = 0; i < Console.WindowHeight - 3; i++)
-            {
-                MakeEdges('|');
-            }
-            FillALine('=', 1);
-            Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
-
-            //Title text
-            FillALine('=', 1, Console.WindowHeight / 4);
-            WriteInCenter("Space cave exploration", (Console.WindowHeight / 4) / 2);
-
-            ConsoleColor background;
-
-            if (currentCursorIndex == 0)
-                background = ConsoleColor.Blue;
-            else
-                background = ConsoleColor.Black;
-            playPosition = 7;
-            WriteInCenter("Play", playPosition, ConsoleColor.Gray, background);
-
-            if (currentCursorIndex == 1)
-                background = ConsoleColor.Blue;
-            else
-                background = ConsoleColor.Black;
-            editorPosition = 10;
-            WriteInCenter("Editor", editorPosition, ConsoleColor.Gray, background);
-
-            if (currentCursorIndex == 2)
-                background = ConsoleColor.Blue;
-            else
-                background = ConsoleColor.Black;
-            settingsPosition = 13;
-            WriteInCenter("Settings", settingsPosition, ConsoleColor.Gray, background);
-
-            if (currentCursorIndex == 3)
-                background = ConsoleColor.Blue;
-            else
-                background = ConsoleColor.Black;
-            exitPosition = 16;
-            WriteInCenter("Exit", exitPosition, ConsoleColor.Gray, background);
-
-        }
-        private void DisplayPlay()
-        {
         }
 
 
@@ -277,18 +251,24 @@ namespace Space_cave_expedition.Graphic_Components
             Console.BackgroundColor = previousBackground;
         }
 
-        private void DisplayTitle()
+        private void DisplayTitle(int startingTop = 1)
         {
-            
-            string titleText2 = @"/‾‾    /‾‾‾\   /‾‾‾\   /‾‾‾    /‾‾  " +
-                                @"\__    |___/   |   |   |       |" +
-                                @"   \   |       |‾‾‾|   |       |‾‾ " +
-                                @" __/   |       |   |   \___    \__ " +
-                                @"" +
-                                @"" +
-                                @"" +
-                                @"";
+            Console.CursorTop = startingTop;
+            string titleText = @"             __   __            __               " + "\n" + 
+                               @"            /    /  \  |    |  /                 " + "\n" +
+                               @"            |    |__|  \    /  |__               " + "\n" +
+                               @"            |    |  |   \  /   |                 " + "\n" +
+                               @"            \__  |  |    \/    \__               " + "\n" +
+                               @" ___         __          __    __    __   __     " + "\n" +
+                               @"/     \  /  /  \  |     /  \  /  \  /    /  \    " + "\n" +
+                               @"|___   \/   |__/  |     |  |  |__/  |__  |__/    " + "\n" +
+                               @"|      /\   |     |     |  |  | \   |    | \     " + "\n" +
+                               @"\___  /  \  |     |___  \__/  |  \  \__  |  \    " + "\n";
 
+            foreach(string s in titleText.Split('\n'))
+            {
+                WriteInCenter(s, Console.CursorTop);
+            }
         }
-    }
+}
 }
