@@ -23,7 +23,7 @@ namespace Space_cave_expedition.Helpers
             return longest;
         }
         /// <summary>
-        /// Reads a directory and returns all map names that should be readable.
+        /// Reads a directory and returns all map names that have the proper files to be readable.
         /// </summary>
         /// <param name="mapDirectoryPath"></param>
         /// <returns>The directory paths to the maps</returns>
@@ -41,10 +41,16 @@ namespace Space_cave_expedition.Helpers
         }
         public static bool VerifyMap(string mapDirectory)
         {
-            List<string> files = new List<string>(Directory.GetFiles(mapDirectory));
-            if (!files.Contains("Entities.txt"))
+            List<string> filePaths = new List<string>(Directory.GetFiles(mapDirectory));
+            List<string> fileNames = new List<string>();
+            foreach(string s in filePaths)
+            {
+                fileNames.Add(s.Split('\\')[^1]);
+            }
+
+            if (!fileNames.Contains("Entities.txt"))
                 return false;
-            if (files.FindAll(x => x.ToLower().EndsWith("template.txt")).Count == 0)
+            if (fileNames.FindAll(x => x.ToLower().EndsWith("template.txt")).Count == 0)
                 return false;
             return true;
         }
