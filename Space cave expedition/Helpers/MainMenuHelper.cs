@@ -91,7 +91,6 @@ namespace Space_cave_expedition.Helpers
         /// </summary>
         public static void MakeFrame()
         {
-            //Making the edges, I removed 3 instead of 2 because I want one space on the bottom.
             FillALine('=', 1);
             for (int i = 0; i < Console.WindowHeight - 3; i++)
             {

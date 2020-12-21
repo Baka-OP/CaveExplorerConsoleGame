@@ -31,6 +31,7 @@ namespace Space_cave_expedition.Graphic_Components
 
         private void DisplayMainMenu()
         {
+            CursorIndexLimit = 3;
             MainMenuHelper.MakeFrame();
             //Title text
             DisplayMainTitle();
@@ -67,7 +68,7 @@ namespace Space_cave_expedition.Graphic_Components
             MainMenuHelper.WriteInCenter("New game", 2);
             MainMenuHelper.FillALine('=', 1, 4);
 
-            for(int i = 5; i < Console.WindowHeight - 2; i++)
+            for(int i = 5; i < Console.WindowHeight - 6; i++)
             {
                 MainMenuHelper.WriteInCenter("|", Console.CursorTop);
             }
@@ -91,6 +92,21 @@ namespace Space_cave_expedition.Graphic_Components
                     MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7, ConsoleColor.Gray, ConsoleColor.Blue);
                 else
                     MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7);
+            }
+
+            //Back to main menu text
+            MainMenuHelper.FillALine('=', 1, Console.WindowHeight - 6);
+            if (currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
+                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4);
+
+
+
+            //Making sure the index limit is updated if you first enter the mapSelection, before which the values should be 0 and 3
+            if(currentTabIndex == 0 && CursorIndexLimit == 3)
+            {
+                CursorIndexLimit = mainMaps.Count;
             }
         }
 
@@ -138,7 +154,7 @@ namespace Space_cave_expedition.Graphic_Components
         {
             while (true)
             {
-                ConsoleKey pressedKey = Console.ReadKey().Key;
+                ConsoleKey pressedKey = Console.ReadKey(true).Key;
 
                 switch (pressedKey)
                 {
@@ -165,10 +181,12 @@ namespace Space_cave_expedition.Graphic_Components
                                 case 1:
                                     CurrentSection = MainMenuSection.Editor;
                                     Console.Clear();
+                                    currentCursorIndex = 0;
                                     break;
                                 case 2:
                                     CurrentSection = MainMenuSection.Settings;
                                     Console.Clear();
+                                    currentCursorIndex = 0;
                                     break;
                                 case 3:
                                     Console.Clear();
@@ -177,7 +195,12 @@ namespace Space_cave_expedition.Graphic_Components
                         }
                         else if (CurrentSection == MainMenuSection.MapSelection)
                         {
-
+                            if(currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
+                            {
+                                CurrentSection = MainMenuSection.MainMenu;
+                                currentCursorIndex = 0;
+                                Console.Clear();
+                            }
                         }
                         break;
                     //Navigation with tabIndex
@@ -226,7 +249,7 @@ namespace Space_cave_expedition.Graphic_Components
         private void DisplayMainTitle(int startingTop = 1)
         {
             Console.CursorTop = startingTop;
-            string titleText = @"             __   __            __           ;" + "\n" + 
+            string titleText = @"             __   __            __           " + "\n" + 
                                @"            /    /  \  |    |  /             " + "\n" +
                                @"            |    |__|  \    /  |__           " + "\n" +
                                @"            |    |  |   \  /   |             " + "\n" +
