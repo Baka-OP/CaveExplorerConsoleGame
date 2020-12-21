@@ -72,33 +72,22 @@ namespace Space_cave_expedition.Graphic_Components
                 MainMenuHelper.WriteInCenter("|", Console.CursorTop);
             }
 
-
-            Console.CursorTop = 6;
-
             //Display main maps
-            if (currentTabIndex == 0 && currentCursorIndex == 0)
-                MainMenuHelper.WriteText("Main maps", 3, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteText("Main maps", 3);
+            MainMenuHelper.WriteText("Main maps", 3, 6);
             for(int i = 0; i < mainMaps.Count; i++)
             {
-                if (currentTabIndex == 0 && currentCursorIndex == i + 1)
+                if (currentTabIndex == 0 && currentCursorIndex == i)
                     MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6, ConsoleColor.Gray, ConsoleColor.Blue);
                 else
                     MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6);
             }
 
-            Console.CursorTop = 6;
-
             //Display custom maps
-            if (currentTabIndex == 1 && currentCursorIndex == 0)
-                MainMenuHelper.WriteText("Custom maps", Console.WindowWidth / 2 + 4, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteText("Custom maps", Console.WindowWidth / 2 + 4);
+            MainMenuHelper.WriteText("Custom maps", Console.WindowWidth / 2 + 4, 6);
 
             for (int i = 0; i < customMaps.Count; i++)
             {
-                if (currentTabIndex == 1 && currentCursorIndex == i + 1)
+                if (currentTabIndex == 1 && currentCursorIndex == i)
                     MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7, ConsoleColor.Gray, ConsoleColor.Blue);
                 else
                     MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7);
@@ -185,6 +174,10 @@ namespace Space_cave_expedition.Graphic_Components
                                     Console.Clear();
                                     return;
                             }
+                        }
+                        else if (CurrentSection == MainMenuSection.MapSelection)
+                        {
+
                         }
                         break;
                     //Navigation with tabIndex
