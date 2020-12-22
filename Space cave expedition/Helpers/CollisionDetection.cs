@@ -33,7 +33,7 @@ namespace Space_cave_expedition.Helpers
                             return false;
                         break;
                     case EntityMoveDirection.Left:
-                        if (xPosition - 1 == mt.MapWidth || mt.Template[xPosition - 1, mt.MapHeight - yPosition - 1] != ' ')
+                        if (xPosition == 0 || mt.Template[xPosition - 1, mt.MapHeight - yPosition - 1] != ' ')
                             return false;
                         break;
                     case EntityMoveDirection.Right:

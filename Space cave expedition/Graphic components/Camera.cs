@@ -134,6 +134,8 @@ namespace Space_cave_expedition.Graphic_Components
         /// <remarks>Do not use this for displaying a lot of times at once, takes a lot of time to display (80-120ms).</remarks>
         public void DisplayMap()
         {
+            Console.WindowWidth = Console.LargestWindowWidth;
+            Console.WindowHeight = Console.LargestWindowHeight;
             if (!IsStarted)
                 Start();
 

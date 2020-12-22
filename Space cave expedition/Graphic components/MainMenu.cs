@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 using Space_cave_expedition.Enums;
 using Space_cave_expedition.Helpers;
+using Space_cave_expedition.Models;
 
 namespace Space_cave_expedition.Graphic_Components
 {
@@ -195,11 +196,25 @@ namespace Space_cave_expedition.Graphic_Components
                         }
                         else if (CurrentSection == MainMenuSection.MapSelection)
                         {
+                            //To main menu button
                             if(currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
                             {
                                 CurrentSection = MainMenuSection.MainMenu;
                                 currentCursorIndex = 0;
+                                currentTabIndex = 0;
                                 Console.Clear();
+                            }
+                            else
+                            {
+                                CurrentSection = MainMenuSection.Map;
+                                Console.Clear();
+                                if (currentTabIndex == 0)
+                                    StartMap(mainMaps[currentCursorIndex]);
+                                else
+                                    StartMap(customMaps[currentCursorIndex]);
+                                currentCursorIndex = 0;
+                                currentTabIndex = 0;
+                                CurrentSection = MainMenuSection.MapSelection;
                             }
                         }
                         break;
@@ -221,29 +236,68 @@ namespace Space_cave_expedition.Graphic_Components
                     case ConsoleKey.LeftArrow:
                         if(CurrentSection == MainMenuSection.MapSelection)
                         {
+                            //Detecting if the cursor is on "to main menu"
+                            if (currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
+                                break;
+
                             currentTabIndex = 0;
                             CursorIndexLimit = mainMaps.Count;
 
-                            if (currentCursorIndex > CursorIndexLimit)
-                                currentCursorIndex = CursorIndexLimit;
+                            if (currentCursorIndex > CursorIndexLimit - 1)
+                                currentCursorIndex = CursorIndexLimit - 1;
                         }
                         break;
                     case ConsoleKey.D:
                     case ConsoleKey.RightArrow:
                         if (CurrentSection == MainMenuSection.MapSelection)
                         {
+                            //Detecting if the cursor is on "to main menu"
+                            if (currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
+                                break;
+
                             currentTabIndex = 1;
                             CursorIndexLimit = customMaps.Count;
 
-                            if (currentCursorIndex > CursorIndexLimit)
-                                currentCursorIndex = CursorIndexLimit;
+                            if (currentCursorIndex > CursorIndexLimit - 1)
+                                currentCursorIndex = CursorIndexLimit - 1;
                         }
                         break;
                 }
                 DisplayMenu();
             }
         }
-
+        private void StartMap(string mapDirectory)
+        {
+            Map m = new Map(mapDirectory);
+            Camera c = new Camera(4, 4, m);
+            Player player = new Player(2, 5);
+            c.FocusedEntity = player;
+            m.AddEntity(c.FocusedEntity);
+            c.DisplayMap();
+            while (true)
+            {
+                ConsoleKey pressedKey = Console.ReadKey().Key;
+                switch (pressedKey)
+                {
+                    case ConsoleKey.A:
+                    case ConsoleKey.LeftArrow:
+                        m.MoveEntity(player, EntityMoveDirection.Left);
+                        break;
+                    case ConsoleKey.D:
+                    case ConsoleKey.RightArrow:
+                        m.MoveEntity(player, EntityMoveDirection.Right);
+                        break;
+                    case ConsoleKey.W:
+                    case ConsoleKey.UpArrow:
+                        m.MoveEntity(player, EntityMoveDirection.Up);
+                        break;
+                    case ConsoleKey.S:
+                    case ConsoleKey.DownArrow:
+                        m.MoveEntity(player, EntityMoveDirection.Down);
+                        break;
+                }
+            }
+        }
 
         //Displaying helper methods
         private void DisplayMainTitle(int startingTop = 1)
