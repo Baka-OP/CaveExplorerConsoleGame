@@ -89,10 +89,18 @@ namespace Space_cave_expedition.Helpers
         /// <summary>
         /// Fills all of the edges of the main menu with = and |
         /// </summary>
-        public static void MakeFrame()
+        /// <param name="leaveASpaceOnTheBottom">Leaves a space on the bottom so that the console doesn't automatically scroll to the bottom while making the frame, use false if the space on the bottom is too large</param>
+        public static void MakeFrame(bool leaveASpaceOnTheBottom = true)
         {
+            int edgeAmount;
+            if (leaveASpaceOnTheBottom)
+                edgeAmount = Console.WindowHeight - 3;
+            else
+                edgeAmount = Console.WindowHeight - 2;
+
+            Console.SetCursorPosition(0, 0);
             FillALine('=', 1);
-            for (int i = 0; i < Console.WindowHeight - 3; i++)
+            for (int i = 0; i < edgeAmount; i++)
             {
                 MakeEdges('|');
             }

@@ -12,113 +12,7 @@ namespace Space_cave_expedition.Graphic_Components
 {
     public class MainMenu
     {
-        #region Section displaying and manipulation
-
-        public void DisplayMenu()
-        {
-            Console.SetCursorPosition(0, 0);
-            switch (CurrentSection)
-            {
-                case MainMenuSection.MainMenu:
-                    DisplayMainMenu();
-                    break;
-                case MainMenuSection.MapSelection:
-                    DisplayPlay();
-                    break;
-                default:
-                    throw new ArgumentException("Unexpected MainMenuSection.");
-            }
-        }
-
-        private void DisplayMainMenu()
-        {
-            CursorIndexLimit = 3;
-            MainMenuHelper.MakeFrame();
-            //Title text
-            DisplayMainTitle();
-            MainMenuHelper.FillALine('=', 1, 13);
-
-            if (currentCursorIndex == 0)
-                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 1)
-                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 2)
-                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 3)
-                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Black);
-        }
-        private void DisplayPlay()
-        {
-            //Load maps
-            mainMaps = Helper.GetAndVerifyMaps(Environment.CurrentDirectory + "\\Map layouts\\Main");
-            customMaps = Helper.GetAndVerifyMaps(Environment.CurrentDirectory + "\\Map layouts\\Custom");
-
-            //New game top part
-            MainMenuHelper.MakeFrame();
-            MainMenuHelper.WriteInCenter("New game", 2);
-            MainMenuHelper.FillALine('=', 1, 4);
-
-            for(int i = 5; i < Console.WindowHeight - 6; i++)
-            {
-                MainMenuHelper.WriteInCenter("|", Console.CursorTop);
-            }
-
-            //Display main maps
-            MainMenuHelper.WriteText("Main maps", 3, 6);
-            for(int i = 0; i < mainMaps.Count; i++)
-            {
-                if (currentTabIndex == 0 && currentCursorIndex == i)
-                    MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6, ConsoleColor.Gray, ConsoleColor.Blue);
-                else
-                    MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6);
-            }
-
-            //Display custom maps
-            MainMenuHelper.WriteText("Custom maps", Console.WindowWidth / 2 + 4, 6);
-
-            for (int i = 0; i < customMaps.Count; i++)
-            {
-                if (currentTabIndex == 1 && currentCursorIndex == i)
-                    MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7, ConsoleColor.Gray, ConsoleColor.Blue);
-                else
-                    MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7);
-            }
-
-            //Back to main menu text
-            MainMenuHelper.FillALine('=', 1, Console.WindowHeight - 6);
-            if (currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
-                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4);
-
-
-
-            //Making sure the index limit is updated if you first enter the mapSelection, before which the values should be 0 and 3
-            if(currentTabIndex == 0 && CursorIndexLimit == 3)
-            {
-                CursorIndexLimit = mainMaps.Count;
-            }
-        }
-
-        #endregion
-        /// <summary>
-        /// On which tab the user is currently on, used in the map selection for whether the player is on the right or left side.
-        /// </summary>
         int currentTabIndex;
-        /// <summary>
-        /// Index for which position the in-game cursor is in the main menu.
-        /// </summary>
         int currentCursorIndex;
         /// <summary>
         /// The highest index the cursor can have.
@@ -148,7 +42,7 @@ namespace Space_cave_expedition.Graphic_Components
             CurrentSection = MainMenuSection.MainMenu;
             ConsoleHook.DisableAllResizingControl();
 
-            DisplayMenu();
+            DisplaySection();
             WaitForInput();
         }
         private void WaitForInput()
@@ -263,7 +157,7 @@ namespace Space_cave_expedition.Graphic_Components
                         }
                         break;
                 }
-                DisplayMenu();
+                DisplaySection();
             }
         }
         private void StartMap(string mapDirectory)
@@ -298,6 +192,119 @@ namespace Space_cave_expedition.Graphic_Components
                 }
             }
         }
+        private void StartEditor()
+        {
+            new MapEditorMenu();
+            CurrentSection = MainMenuSection.MainMenu;
+            Console.SetWindowSize(60, 28);
+            DisplaySection();
+        }
+
+        #region Section displaying and manipulation
+
+        public void DisplaySection()
+        {
+            Console.SetCursorPosition(0, 0);
+            switch (CurrentSection)
+            {
+                case MainMenuSection.MainMenu:
+                    DisplayMainMenu();
+                    break;
+                case MainMenuSection.MapSelection:
+                    DisplayMapSelection();
+                    break;
+                case MainMenuSection.Editor:
+                    StartEditor();
+                    break;
+                default:
+                    throw new ArgumentException("Unexpected MainMenuSection.");
+            }
+        }
+
+        private void DisplayMainMenu()
+        {
+            CursorIndexLimit = 3;
+            MainMenuHelper.MakeFrame();
+            //Title text
+            DisplayMainTitle();
+            MainMenuHelper.FillALine('=', 1, 13);
+
+            if (currentCursorIndex == 0)
+                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Black);
+
+            if (currentCursorIndex == 1)
+                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Black);
+
+            if (currentCursorIndex == 2)
+                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Black);
+
+            if (currentCursorIndex == 3)
+                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Black);
+        }
+        private void DisplayMapSelection()
+        {
+            //Load maps
+            mainMaps = Helper.GetAndVerifyMaps(Environment.CurrentDirectory + "\\Map layouts\\Main");
+            customMaps = Helper.GetAndVerifyMaps(Environment.CurrentDirectory + "\\Map layouts\\Custom");
+
+            //New game top part
+            MainMenuHelper.MakeEdges('|', 0);
+            MainMenuHelper.MakeFrame();
+            MainMenuHelper.MakeEdges('|', Console.WindowHeight - 2);
+            MainMenuHelper.WriteInCenter("New game", 2);
+            MainMenuHelper.FillALine('=', 1, 4);
+
+            for(int i = 5; i < Console.WindowHeight - 6; i++)
+            {
+                MainMenuHelper.WriteInCenter("|", Console.CursorTop);
+            }
+
+            //Display main maps
+            MainMenuHelper.WriteText("Main maps", 3, 6);
+            for(int i = 0; i < mainMaps.Count; i++)
+            {
+                if (currentTabIndex == 0 && currentCursorIndex == i)
+                    MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6, ConsoleColor.Gray, ConsoleColor.Blue);
+                else
+                    MainMenuHelper.WriteText(mainMaps[i].Split('\\')[^1], 6);
+            }
+
+            //Display custom maps
+            MainMenuHelper.WriteText("Custom maps", Console.WindowWidth / 2 + 4, 6);
+
+            for (int i = 0; i < customMaps.Count; i++)
+            {
+                if (currentTabIndex == 1 && currentCursorIndex == i)
+                    MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7, ConsoleColor.Gray, ConsoleColor.Blue);
+                else
+                    MainMenuHelper.WriteText(customMaps[i].Split('\\')[^1], Console.WindowWidth / 2 + 7);
+            }
+
+            //Back to main menu text
+            MainMenuHelper.FillALine('=', 1, Console.WindowHeight - 6);
+            if (currentTabIndex == 0 && currentCursorIndex == mainMaps.Count || currentTabIndex == 1 && currentCursorIndex == customMaps.Count)
+                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4, ConsoleColor.Gray, ConsoleColor.Blue);
+            else
+                MainMenuHelper.WriteInCenter("To main menu", Console.WindowHeight - 4);
+
+
+
+            //Making sure the index limit is updated if you first enter the mapSelection, before which the values should be 0 and 3
+            if(currentTabIndex == 0 && CursorIndexLimit == 3)
+            {
+                CursorIndexLimit = mainMaps.Count;
+            }
+        }
+
+        #endregion
 
         //Displaying helper methods
         private void DisplayMainTitle(int startingTop = 1)
@@ -319,5 +326,5 @@ namespace Space_cave_expedition.Graphic_Components
                 MainMenuHelper.WriteInCenter(s, Console.CursorTop);
             }
         }
-}
+    }
 }
