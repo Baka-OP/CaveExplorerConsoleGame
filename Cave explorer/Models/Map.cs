@@ -37,16 +37,16 @@ namespace Cave_Explorer.Models
                     switch (helper)
                     {
                         case "red":
-                            MapTemplates.Add(new MapTemplate(File.ReadAllText(s), ConsoleColor.Red));
+                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Red));
                             break;
                         case "green":
-                            MapTemplates.Add(new MapTemplate(File.ReadAllText(s), ConsoleColor.Green));
+                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Green));
                             break;
                         case "blue":
-                            MapTemplates.Add(new MapTemplate(File.ReadAllText(s), ConsoleColor.Blue));
+                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Blue));
                             break;
                         case "gray":
-                            MapTemplates.Add(new MapTemplate(File.ReadAllText(s), ConsoleColor.Gray));
+                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Gray));
                             break;
                     }
                 }

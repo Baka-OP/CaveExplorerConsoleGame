@@ -12,6 +12,10 @@ namespace Cave_Explorer.Models
     public class MapTemplate
     {
         /// <summary>
+        /// Returns a path to the txt file this template uses, if this template doesn't use a txt file, null is returned
+        /// </summary>
+        public string TextFileTemplatePath { get; private set; }
+        /// <summary>
         /// Color the template is supposed to have when displaying.
         /// </summary>
         public ConsoleColor Color { get; set; }
@@ -54,10 +58,12 @@ namespace Cave_Explorer.Models
         /// </summary>
         /// <param name="textFileTemplate"></param>
         /// <param name="color"></param>
-        public MapTemplate(string textFileTemplate, ConsoleColor color)
+        public MapTemplate(string textFileTemplatePath, ConsoleColor color)
         {
-            _TextFileTemplate = textFileTemplate;
-            string[] lines = textFileTemplate.Split('\n');
+            TextFileTemplatePath = textFileTemplatePath;
+
+            TextFileTemplate = System.IO.File.ReadAllText(textFileTemplatePath);
+            string[] lines = TextFileTemplate.Split('\n');
             MapHeight = lines.Length;
             MapWidth = Helper.GetLongestStringLength(lines);
             Color = color;

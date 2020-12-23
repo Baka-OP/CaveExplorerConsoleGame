@@ -1,12 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Threading;
-using System.Diagnostics;
-using System.Collections.Generic;
 
-using Cave_Explorer.Models;
-using Cave_Explorer.Enums;
-using Cave_Explorer.Interfaces;
 using Cave_Explorer.Graphic_Components;
 
 namespace Cave_Explorer
@@ -15,6 +8,8 @@ namespace Cave_Explorer
     {
         static void Main()
         {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
             new MainMenu();
