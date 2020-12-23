@@ -4,6 +4,7 @@ using System.Text;
 
 using Cave_Explorer.Models;
 using Cave_Explorer.Enums;
+using Cave_Explorer.Helpers;
 
 namespace Cave_Explorer.Graphic_Components
 {
@@ -73,7 +74,8 @@ namespace Cave_Explorer.Graphic_Components
 
         private void Display()
         {
-            Console.WriteLine("Test.");
+            DisplayMap();
+            DisplayRightPanel();
         }
 
         private void DisplayMap()

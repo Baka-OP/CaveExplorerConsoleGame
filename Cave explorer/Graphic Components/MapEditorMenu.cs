@@ -159,6 +159,7 @@ namespace Cave_Explorer.Graphic_Components
 
         private void StartEditor()
         {
+            Console.Clear();
             new MapEditorUI(new MapEditor(Environment.CurrentDirectory + "\\Map Layouts\\Main\\Test"));
             currentSection = MapEditorSection.Menu;
             Console.Clear();
