@@ -13,7 +13,6 @@ namespace Cave_Explorer
 {
     class Program
     {
-        static readonly string ProgramLocation = Environment.CurrentDirectory;
         static void Main()
         {
             Console.OutputEncoding = System.Text.Encoding.Unicode;

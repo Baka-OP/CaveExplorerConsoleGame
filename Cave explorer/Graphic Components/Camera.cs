@@ -150,10 +150,10 @@ namespace Cave_Explorer.Graphic_Components
                 {
                     for(int j = 0; j < mp.MapWidth; j++)
                     {
-                        if(mp.Template[j, i] != ' ')
+                        if(mp.Layout[j, i] != ' ')
                         {
                             Console.SetCursorPosition(j + StartingCursorLeft, i + StartingCursorTop);
-                            Console.Write(mp.Template[j, i]);
+                            Console.Write(mp.Layout[j, i]);
                         }
                     }
                     Console.WriteLine();

@@ -189,6 +189,15 @@ namespace Cave_Explorer.Graphic_Components
                     case ConsoleKey.DownArrow:
                         m.MoveEntity(player, EntityMoveDirection.Down);
                         break;
+                    case ConsoleKey.Escape:
+                        c.Stop();
+                        Console.SetWindowSize(60, 28);
+                        Console.BufferHeight = 29;
+                        Console.BufferWidth = 61;
+                        Console.Clear();
+                        CurrentSection = MainMenuSection.MapSelection;
+                        DisplaySection();
+                        return;
                 }
             }
         }

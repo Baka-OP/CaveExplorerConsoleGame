@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Cave_Explorer.Enums
+﻿namespace Cave_Explorer.Enums
 {
     public enum MainMenuSection
     {

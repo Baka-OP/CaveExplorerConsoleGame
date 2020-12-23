@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Text;
 
 using Cave_Explorer.Enums;
+using Cave_Explorer.Models;
 using Cave_Explorer.Helpers;
 
 namespace Cave_Explorer.Graphic_Components
 {
     class MapEditorMenu
     {
+        string mapNameInput;
+
         private int currentTabIndex;
         private int currentCursorIndex;
         private int currentTabIndexLimit;
         private int currentCursorIndexLimit;
-        private EditorSection currentSection;
+        private MapEditorSection currentSection;
         public MapEditorMenu()
         {
-            currentSection = EditorSection.Menu;
+            mapNameInput = "";
+            currentSection = MapEditorSection.Menu;
             DisplaySection();
             WaitForInput();
         }
@@ -25,6 +29,7 @@ namespace Cave_Explorer.Graphic_Components
             while (true)
             {
                 ConsoleKey input = Console.ReadKey(true).Key;
+                
                 switch (input)
                 {
                     case ConsoleKey.W:
@@ -39,16 +44,16 @@ namespace Cave_Explorer.Graphic_Components
                         break;
 
                     case ConsoleKey.Enter:
-                        if(currentSection == EditorSection.Menu)
+                        if(currentSection == MapEditorSection.Menu)
                         {
                             switch(currentCursorIndex)
                             {
                                 case 0:
-                                    currentSection = EditorSection.NewMap;
+                                    currentSection = MapEditorSection.NewMap;
                                     Console.Clear();
                                     break;
                                 case 1:
-                                    currentSection = EditorSection.EditMap;
+                                    currentSection = MapEditorSection.EditMap;
                                     Console.Clear();
                                     break;
                                 case 2:
@@ -67,14 +72,16 @@ namespace Cave_Explorer.Graphic_Components
         {
             switch (currentSection)
             {
-                case EditorSection.Menu:
+                case MapEditorSection.Menu:
                     DisplayMenu();
+                    break;
+                case MapEditorSection.NewMap:
+                    DisplayNewMap();
                     break;
                 default:
                     throw new ArgumentException("Unexpected section.");
             }
         }
-
         private void DisplayMenu()
         {
             currentCursorIndexLimit = 2;
@@ -101,6 +108,61 @@ namespace Cave_Explorer.Graphic_Components
                 MainMenuHelper.WriteInCenter("Back to main menu", 10);
 
         }
-    }
+        private void DisplayNewMap()
+        {
+            while (true)
+            {
+                currentCursorIndexLimit = 2;
+                Console.SetWindowSize(30, 14);
+                Console.SetBufferSize(31, 15);
 
+                MainMenuHelper.MakeFrame();
+                MainMenuHelper.WriteInCenter("New map", 2);
+                MainMenuHelper.FillALine('=', 1, 4);
+
+                MainMenuHelper.WriteInCenter("Map name: ", 6);
+                MainMenuHelper.WriteText(mapNameInput.PadRight(14), 8, 8);
+                MainMenuHelper.WriteInCenter("‾‾‾‾‾‾‾‾‾‾‾‾‾‾", 9);
+
+                Console.SetCursorPosition(8 + mapNameInput.Length, 8);
+                Console.CursorVisible = true;
+                ConsoleKeyInfo input = Console.ReadKey();
+
+                switch (input.Key)
+                {
+                    case ConsoleKey.Enter:
+                        StartEditor();
+                        break;
+                    case ConsoleKey.Backspace:
+                        if (mapNameInput.Length > 0)
+                            mapNameInput = mapNameInput.Remove(mapNameInput.Length - 1);
+                        break;
+                    case ConsoleKey.Escape:
+                        currentSection = MapEditorSection.Menu;
+                        Console.Clear();
+                        Console.CursorVisible = false;
+                        DisplayMenu(); //I need to display the menu here, or else the player will be on a blank screen.
+                        return;
+                    default:
+                        if (mapNameInput.Length < 14)
+                        {
+                            if (input.KeyChar == ' ')
+                                mapNameInput += ' ';
+                            else
+                                //trim used for getting rid of characters like pgup, del, insert, tab
+                                mapNameInput += input.KeyChar.ToString().Trim(); 
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void StartEditor()
+        {
+            new MapEditorUI(new MapEditor(Environment.CurrentDirectory + "\\Map Layouts\\Main\\Test"));
+            currentSection = MapEditorSection.Menu;
+            Console.Clear();
+            DisplaySection();
+        }
+    }
 }

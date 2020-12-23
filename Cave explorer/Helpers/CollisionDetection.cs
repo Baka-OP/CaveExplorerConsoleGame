@@ -25,19 +25,19 @@ namespace Cave_Explorer.Helpers
                 {
                     //First the collision detector checks whether the player is about to move out of the map,
                     case EntityMoveDirection.Up:
-                        if (yPosition + 1 == mt.MapHeight || mt.Template[xPosition, mt.MapHeight - yPosition - 2] != ' ')
+                        if (yPosition + 1 == mt.MapHeight || mt.Layout[xPosition, mt.MapHeight - yPosition - 2] != ' ')
                             return false;
                         break;
                     case EntityMoveDirection.Down:
-                        if (yPosition == 0 || mt.Template[xPosition, mt.MapHeight - yPosition] != ' ')
+                        if (yPosition == 0 || mt.Layout[xPosition, mt.MapHeight - yPosition] != ' ')
                             return false;
                         break;
                     case EntityMoveDirection.Left:
-                        if (xPosition == 0 || mt.Template[xPosition - 1, mt.MapHeight - yPosition - 1] != ' ')
+                        if (xPosition == 0 || mt.Layout[xPosition - 1, mt.MapHeight - yPosition - 1] != ' ')
                             return false;
                         break;
                     case EntityMoveDirection.Right:
-                        if (xPosition + 1 == mt.MapWidth || mt.Template[xPosition + 1, mt.MapHeight - yPosition - 1] != ' ')
+                        if (xPosition + 1 == mt.MapWidth || mt.Layout[xPosition + 1, mt.MapHeight - yPosition - 1] != ' ')
                             return false;
                         break;
                 }
