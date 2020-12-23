@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Space_cave_expedition.Models;
-using Space_cave_expedition.Enums;
+using Cave_Explorer.Models;
+using Cave_Explorer.Enums;
 
-namespace Space_cave_expedition.Helpers
+namespace Cave_Explorer.Helpers
 {
     public static class CollisionDetection
     {

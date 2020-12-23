@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Space_cave_expedition.Interfaces;
-using Space_cave_expedition.Models;
+using Cave_Explorer.Interfaces;
+using Cave_Explorer.Models;
 
-namespace Space_cave_expedition.Graphic_Components
+namespace Cave_Explorer.Graphic_Components
 {
     public class Camera
     {

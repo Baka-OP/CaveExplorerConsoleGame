@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-using Space_cave_expedition.Helpers;
+using Cave_Explorer.Helpers;
 
-namespace Space_cave_expedition.Models
+namespace Cave_Explorer.Models
 {
     /// <summary>
     /// A base layout of the map combined with a color with which it should be displayed.

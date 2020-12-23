@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Space_cave_expedition.Models
+namespace Cave_Explorer.Models
 {
     /// <summary>
     /// Represents a single coordinate on a field.

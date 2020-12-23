@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Space_cave_expedition.Enums;
-using Space_cave_expedition.Helpers;
-using Space_cave_expedition.Models;
+using Cave_Explorer.Enums;
+using Cave_Explorer.Helpers;
+using Cave_Explorer.Models;
 
-namespace Space_cave_expedition.Graphic_Components
+namespace Cave_Explorer.Graphic_Components
 {
     public class MainMenu
     {

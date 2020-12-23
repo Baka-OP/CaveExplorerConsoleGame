@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Space_cave_expedition.Helpers
+namespace Cave_Explorer.Helpers
 {
     public static class ConsoleHook
     {

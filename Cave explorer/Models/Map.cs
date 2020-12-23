@@ -3,11 +3,11 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-using Space_cave_expedition.Interfaces;
-using Space_cave_expedition.Enums;
-using Space_cave_expedition.Helpers;
+using Cave_Explorer.Interfaces;
+using Cave_Explorer.Enums;
+using Cave_Explorer.Helpers;
 
-namespace Space_cave_expedition.Models
+namespace Cave_Explorer.Models
 {
     public class Map
     {

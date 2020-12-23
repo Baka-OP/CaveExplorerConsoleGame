@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Space_cave_expedition.Models
+namespace Cave_Explorer.Models
 {
     public delegate void EntityPositionChanged(object sender, EntityPositionChangedArgs e);
     public class EntityPositionChangedArgs: EventArgs

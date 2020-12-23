@@ -3,7 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Space_cave_expedition.Helpers
+namespace Cave_Explorer.Helpers
 {
     class Helper
     {

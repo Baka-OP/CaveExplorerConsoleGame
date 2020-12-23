@@ -4,12 +4,12 @@ using System.Threading;
 using System.Diagnostics;
 using System.Collections.Generic;
 
-using Space_cave_expedition.Models;
-using Space_cave_expedition.Enums;
-using Space_cave_expedition.Interfaces;
-using Space_cave_expedition.Graphic_Components;
+using Cave_Explorer.Models;
+using Cave_Explorer.Enums;
+using Cave_Explorer.Interfaces;
+using Cave_Explorer.Graphic_Components;
 
-namespace Space_cave_expedition
+namespace Cave_Explorer
 {
     class Program
     {

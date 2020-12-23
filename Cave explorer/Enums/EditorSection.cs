@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Space_cave_expedition.Enums
+namespace Cave_Explorer.Enums
 {
     enum EditorSection
     {
