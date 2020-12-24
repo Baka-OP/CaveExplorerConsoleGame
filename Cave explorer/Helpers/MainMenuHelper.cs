@@ -68,6 +68,18 @@ namespace Cave_Explorer.Helpers
             Console.WriteLine(characterToDisplay);
         }
         /// <summary>
+        /// Puts a character on the edges of a specific line.
+        /// </summary>
+        /// <param name="characterToDisplay"></param>
+        /// <param name="startingTop"></param>
+        public static void MakeEdges(char characterToDisplay, int startingTop, int leftMargin, int rightMargin)
+        {
+            Console.SetCursorPosition(leftMargin, startingTop);
+            Console.Write(characterToDisplay);
+            Console.SetCursorPosition(Console.WindowWidth - rightMargin - 1, Console.CursorTop);
+            Console.WriteLine(characterToDisplay);
+        }
+        /// <summary>
         /// Writes text into the center of the screen.
         /// </summary>
         /// <param name="text"></param>
@@ -87,6 +99,34 @@ namespace Cave_Explorer.Helpers
             Console.BackgroundColor = previousBackground;
         }
         /// <summary>
+        /// Writes text in the center of a specified range, derived from the margins (leftMargin = 5 means the first five console positions will be ignored in this calculation)
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="startingTop"></param>
+        public static void WriteInCenter(string text, int startingTop, int leftMargin, int rightMargin, ConsoleColor foreground = ConsoleColor.Gray, ConsoleColor background = ConsoleColor.Black)
+        {
+            ConsoleColor previousForeground = Console.ForegroundColor;
+            ConsoleColor previousBackground = Console.BackgroundColor;
+
+            Console.ForegroundColor = foreground;
+            Console.BackgroundColor = background;
+
+            Console.SetCursorPosition(0, startingTop);
+            int width = Console.WindowWidth - leftMargin - rightMargin;
+            int padding = (int)Math.Round((width / 2.0) - (text.Length / 2.0));
+            Console.SetCursorPosition(padding + leftMargin, startingTop);
+            Console.WriteLine(text);
+            /*
+            Console.SetCursorPosition(0, startingTop);
+            int padding = (int)Math.Round((Console.WindowWidth / 2.0) - (text.Length / 2.0));
+            Console.SetCursorPosition(padding, startingTop);
+            Console.WriteLine(text);*/
+            Console.ForegroundColor = previousForeground;
+            Console.BackgroundColor = previousBackground;
+
+
+        }
+        /// <summary>
         /// Fills all of the edges of the main menu with = and |
         /// </summary>
         /// <param name="leaveASpaceOnTheBottom">Leaves a space on the bottom so that the console doesn't automatically scroll to the bottom while making the frame, use false if the space on the bottom is too large</param>
@@ -103,6 +143,26 @@ namespace Cave_Explorer.Helpers
             for (int i = 0; i < edgeAmount; i++)
             {
                 MakeEdges('|');
+            }
+            FillALine('=', 1);
+        }
+        /// <summary>
+        /// Fills all of the edges of the main menu with = and | with a specific margin -> doesn't cover the edges of the console.
+        /// </summary>
+        /// <param name="leaveASpaceOnTheBottom">Leaves a space on the bottom so that the console doesn't automatically scroll to the bottom while making the frame, use false if the space on the bottom is too large</param>
+        public static void MakeFrame(int leftMargin, int rightMargin, bool leaveASpaceOnTheBottom = true)
+        {
+            int edgeAmount;
+            if (leaveASpaceOnTheBottom)
+                edgeAmount = Console.WindowHeight - 3;
+            else
+                edgeAmount = Console.WindowHeight - 2;
+
+            Console.SetCursorPosition(0, 0);
+            FillALine('=', 1);
+            for (int i = 0; i < edgeAmount; i++)
+            {
+                MakeEdges('|', Console.CursorTop, leftMargin, rightMargin);
             }
             FillALine('=', 1);
         }

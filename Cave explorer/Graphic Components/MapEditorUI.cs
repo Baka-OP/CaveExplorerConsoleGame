@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,9 +23,9 @@ namespace Cave_Explorer.Graphic_Components
         /// </summary>
         private const int mapStartTopMargin = 1;
 
-        private const int maxMapWidth = 40;
-        private const int maxMapHeight = 20;
         #endregion
+        private int maxMapWidth = 40;
+        private int maxMapHeight = 20;
         #region Map editor indexes and margins
         /// <summary>
         /// From which Left index the map should start to be displayed. Used for scrolling
@@ -60,9 +61,11 @@ namespace Cave_Explorer.Graphic_Components
         private MapEditor EditorInstance;
         public MapEditorUI(MapEditor editor)
         {
+            mapRefreshRequested = true;
             Console.SetWindowSize(Console.LargestWindowWidth - 4, Console.LargestWindowHeight - 4);
             currentSection = EditorUISection.EditMap;
             EditorInstance = editor;
+            DisplayRightPanel();
             WaitForInput();
         }
 
@@ -76,7 +79,6 @@ namespace Cave_Explorer.Graphic_Components
                 switch (input)
                 {
                     case ConsoleKey.UpArrow:
-                        //I know that moving the RedisplayPosition method above the cursorTopPosition would be faster, but it doesn't work and idk why yet, will try to fix this issue though.
                         if(currentTabIndex == 0)
                         {
                             if (cursorTopPosition > 0)
@@ -106,9 +108,9 @@ namespace Cave_Explorer.Graphic_Components
                     case ConsoleKey.RightArrow:
                         if (currentTabIndex == 0)
                         {
-                            if (cursorLeftPosition < maxMapWidth - 1)
+                            if (cursorLeftPosition < currentLeftMargin + maxMapWidth - 1)
                                 cursorLeftPosition++;
-                            else if (currentLeftMargin < EditorInstance.MapWidth - maxMapWidth - 1)
+                            else if (cursorLeftPosition < EditorInstance.MapWidth - 1)
                             {
                                 cursorLeftPosition++;
                                 currentLeftMargin++;
@@ -124,40 +126,53 @@ namespace Cave_Explorer.Graphic_Components
         {
             Console.CursorVisible = false;
             if (mapRefreshRequested)
-                RefreshMap();
-            DisplayMap();
+            {
+                RemoveMap();
+                DisplayMap();
+                mapRefreshRequested = false;
+            }
             DisplayRightPanel();
+
             Console.SetCursorPosition(cursorLeftPosition + mapStartLeftMargin - currentLeftMargin, cursorTopPosition + mapStartTopMargin - currentTopMargin);
             Console.CursorVisible = true;
         }
-
         private void DisplayMap()
         {
-             MainMenuHelper.MakeFrame();
+            maxMapHeight = Console.WindowHeight - 2;
+            maxMapWidth = Console.WindowWidth - 32;
+
+            MainMenuHelper.MakeFrame();
             foreach(MapTemplate mt in EditorInstance.Templates)
             {
                 Console.ForegroundColor = mt.Color;
+                
                 for(int i = currentTopMargin; i < currentTopMargin + maxMapHeight; i++)
                 {
                     for(int j = currentLeftMargin; j < currentLeftMargin + maxMapWidth; j++)
                     {
                         if(j < mt.MapWidth && i < mt.MapHeight && mt.Layout[j, i] != ' ')
                         {
-                            Console.SetCursorPosition(j + mapStartLeftMargin - currentLeftMargin, i + mapStartTopMargin - currentTopMargin);
-                            Console.Write(mt.Layout[j, i]);
+                             Console.SetCursorPosition(j + mapStartLeftMargin - currentLeftMargin, i + mapStartTopMargin - currentTopMargin);
+                             Console.Write(mt.Layout[j, i]);
                         }
                     }
                 }
-                Console.SetCursorPosition(cursorLeftPosition + 1, cursorTopPosition + 1);
+
+                Console.SetCursorPosition(cursorLeftPosition + mapStartLeftMargin, cursorTopPosition + mapStartTopMargin);
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
         }
         private void DisplayRightPanel()
         {
+            MainMenuHelper.MakeFrame(Console.WindowWidth - 31, 0);
+            int textStart = Console.WindowWidth - 29;
+            MainMenuHelper.WriteInCenter("Settings", 3, textStart, 2);
 
+            MainMenuHelper.WriteText("Current X position: " + cursorLeftPosition.ToString().PadRight(4), textStart, 5);
+            MainMenuHelper.WriteText("Current Y position: " + (EditorInstance.MapHeight - cursorTopPosition - 1).ToString().PadRight(4), textStart, 6);
         }
 
-        private void RefreshMap()
+        private void RemoveMap()
         {
             for(int i = 0; i < EditorInstance.MapHeight; i++)
             {

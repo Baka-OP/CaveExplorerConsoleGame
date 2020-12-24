@@ -40,7 +40,6 @@ namespace Cave_Explorer.Graphic_Components
             Console.BufferWidth = 61;
             Console.CursorVisible = false;
             CurrentSection = MainMenuSection.MainMenu;
-            ConsoleHook.DisableAllResizingControl();
 
             DisplaySection();
             WaitForInput();
