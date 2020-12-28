@@ -51,6 +51,37 @@ namespace Cave_Explorer.Models
                 if (t.MapHeight != MapHeight || t.MapWidth != MapWidth)
                     t.ChangeSize(MapWidth, MapHeight);
             }
+            CheckValues();
+        }
+        /// <summary>
+        /// Checks the values inside all of the MapTemplates to see if there are any positions that are in occupied by multiple templates. If any are found, clears those positions.
+        /// </summary>
+        private void CheckValues()
+        {
+            for(int i = 0; i < MapHeight; i++)
+            {
+                for (int j = 0; j < MapWidth; j++)
+                {
+                    int occupiedCount = 0;
+                    for(int templateNum = 0; templateNum < Templates.Count; templateNum++)
+                    {
+                        if (Templates[templateNum].Layout[j, i] != ' ')
+                            occupiedCount++;
+                    }
+                    if (occupiedCount > 1)
+                        ClearValueFromAll(j, i);
+                }
+            }
+        }
+        /// <summary>
+        /// Clears the value of an index from all of the templates.
+        /// </summary>
+        public void ClearValueFromAll(int left, int top)
+        {
+            foreach(MapTemplate mt in Templates)
+            {
+                mt.Layout[left, top] = ' ';
+            }
         }
         public void SetMapSize(int newWidth, int newHeight)
         {
@@ -58,6 +89,22 @@ namespace Cave_Explorer.Models
             {
                 t.ChangeSize(newWidth, newHeight);
             }
+            MapHeight = newHeight;
+            MapWidth = newWidth;
+        }
+        public void SetValue(int left, int top, char value, ConsoleColor color)
+        {
+            foreach(MapTemplate t in Templates)
+            {
+                if(t.Color == color)
+                {
+                    t.SetIndexValue(left, top, value);
+                    return;
+                }
+            }
+            MapTemplate template = new MapTemplate(MapWidth, MapHeight, color);
+            template.SetIndexValue(left, top, value);
+            Templates.Add(template);
         }
     }
 }

@@ -9,11 +9,9 @@ using Cave_Explorer.Helpers;
 
 namespace Cave_Explorer.Graphic_Components
 {
-    //I bet this code is gonna become a mess after I finish it
     class MapEditorUI
     {
-        private EditorUISection currentSection;
-        #region Constants
+        #region Map displaying modifiers
         /// <summary>
         /// How far from the left side should the map start to display
         /// </summary>
@@ -22,19 +20,24 @@ namespace Cave_Explorer.Graphic_Components
         /// How far from the top side should the map start to display
         /// </summary>
         private const int mapStartTopMargin = 1;
-
-        #endregion
         private int maxMapWidth = 40;
         private int maxMapHeight = 20;
-        #region Map editor indexes and margins
-        /// <summary>
-        /// From which Left index the map should start to be displayed. Used for scrolling
-        /// </summary>
-        private int currentLeftMargin;
         /// <summary>
         /// From which Top index the map should start to be displayed. Used for scrolling
         /// </summary>
         private int currentTopMargin;
+        /// <summary>
+        /// From which Left index the map should start to be displayed. Used for scrolling
+        /// </summary>
+        private int currentLeftMargin;
+        #endregion
+        #region Indexes and selections
+        /// <summary>
+        /// Current section of the editor that the cursor is focused on
+        /// </summary>
+        private EditorUISection currentSection;
+
+        private ConsoleColor currentColor;
         /// <summary>
         /// Current left position in the map that the cursor is pointing to
         /// </summary>
@@ -43,7 +46,6 @@ namespace Cave_Explorer.Graphic_Components
         /// Current top position in the map that the cursor is pointing to
         /// </summary>
         private int cursorTopPosition;
-        #endregion
         /// <summary>
         /// Cursor index on the panel on the right.
         /// </summary>
@@ -53,62 +55,98 @@ namespace Cave_Explorer.Graphic_Components
         /// 1 = cursor in the right panel
         /// </summary>
         private int currentTabIndex;
+        #endregion
+
         /// <summary>
         /// Whether the Displaying method should completely refresh the map editor (used for camera scrolling, where you need to completely rewrite the map)
         /// </summary>
         private bool mapRefreshRequested;
+        /// <summary>
+        /// Whether the editor is waiting for shutdown.
+        /// </summary>
+        private bool shutDown;
+        /// <summary>
+        /// Whether enter has been pressed, used for making the app react differently when enter has been pressed (color selection on the right panel, etc.)
+        /// </summary>
+        private bool enterPressed;
 
-        private MapEditor EditorInstance;
-        public MapEditorUI(MapEditor editor)
+        public MapEditor EditorInstance { get; private set; }
+        public MapEditorUI(MapEditor editorInstance)
         {
             mapRefreshRequested = true;
+            currentColor = 0;
             Console.SetWindowSize(Console.LargestWindowWidth - 4, Console.LargestWindowHeight - 4);
             currentSection = EditorUISection.EditMap;
-            EditorInstance = editor;
-            DisplayRightPanel();
-            WaitForInput();
+            EditorInstance = editorInstance;
         }
-
-        private void WaitForInput()
+        public void Start()
         {
             while (true)
             {
-                Display();
-                ConsoleKey input = Console.ReadKey().Key;
+                if (shutDown)
+                    return;
+                else if(currentSection == EditorUISection.EditMap)
+                {
+                    if (currentTabIndex == 0)
+                        WaitForInputMapEdit();
+                    else if (currentTabIndex == 1)
+                        WaitForInputRightPanel();
+                }
+                else if (currentSection == EditorUISection.EditEntities)
+                {
+                    //Nothing happens for now, still need to implement this later
+                }
+            }
+        }
 
-                switch (input)
+        //Methods for reading input
+        private void WaitForInputMapEdit()
+        {
+            while (true)
+            {
+                Console.CursorVisible = false;
+                DisplayRightPanel();
+                Display();
+                Console.CursorVisible = true;
+                ConsoleKeyInfo input = Console.ReadKey(true);
+
+                switch (input.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        if(currentTabIndex == 0)
-                        {
-                            if (cursorTopPosition > 0)
-                                cursorTopPosition--;
-                        }
+                        if (cursorTopPosition > 0)
+                            cursorTopPosition--;
                         break;
                     case ConsoleKey.DownArrow:
-                        if (currentTabIndex == 0)
+                        //Check if cursor isn't on the edge of the map
+                        if (cursorTopPosition < EditorInstance.MapHeight - 1)
                         {
-                            if (cursorTopPosition + 1 < EditorInstance.MapHeight)
+                            //Cursor isn't in the right edge of the screen (no scrolling required)
+                            if (cursorTopPosition < currentTopMargin + maxMapHeight)
                                 cursorTopPosition++;
-                        }
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        if (currentTabIndex == 0)
-                        {
-                            if (cursorLeftPosition > currentLeftMargin)
-                                cursorLeftPosition--;
-                            else if (currentLeftMargin > 0)
+                            else if (cursorLeftPosition < EditorInstance.MapHeight - 1)
                             {
-                                currentLeftMargin--;
-                                cursorLeftPosition--;
+                                cursorTopPosition++;
+                                currentTopMargin++;
                                 mapRefreshRequested = true;
                             }
                         }
                         break;
-                    case ConsoleKey.RightArrow:
-                        if (currentTabIndex == 0)
+                    case ConsoleKey.LeftArrow:
+                        if (cursorLeftPosition > currentLeftMargin)
+                            cursorLeftPosition--;
+                        else if (currentLeftMargin > 0)
                         {
-                            if (cursorLeftPosition < currentLeftMargin + maxMapWidth - 1)
+                            currentLeftMargin--;
+                            cursorLeftPosition--;
+                            mapRefreshRequested = true;
+                        }
+                        break;
+                    case ConsoleKey.RightArrow:
+                        //Check if cursor isn't on the edge of the map
+                        if (cursorLeftPosition < EditorInstance.MapWidth - 1)
+                        {
+                            //Cursor isn't in the right edge of the screen (no scrolling required)
+                            if (cursorLeftPosition < currentLeftMargin + maxMapWidth)
                                 cursorLeftPosition++;
                             else if (cursorLeftPosition < EditorInstance.MapWidth - 1)
                             {
@@ -118,13 +156,105 @@ namespace Cave_Explorer.Graphic_Components
                             }
                         }
                         break;
+                    case ConsoleKey.Tab:
+                        currentTabIndex = 1;
+                        return;
+                    case ConsoleKey.Escape:
+                        shutDown = true;
+                        return;
+                    case ConsoleKey.Home:
+                        mapRefreshRequested = true;
+                        break;
+                    case ConsoleKey.Backspace:
+                        if (currentTabIndex == 0)
+                        {
+                            EditorInstance.ClearValueFromAll(cursorLeftPosition, cursorTopPosition);
+                            mapRefreshRequested = true;
+                        }
+                        break;
+                    default:
+                        if (currentTabIndex == 0)
+                        {
+                            string inputChar = input.KeyChar.ToString().Trim();
+                            if (inputChar.Length == 1)
+                            {
+                                EditorInstance.SetValue(cursorLeftPosition, cursorTopPosition, inputChar[0], currentColor);
+                            }
+                            mapRefreshRequested = true;
+                        }
+                        break;
+                }
+            }
+        }
+        private void WaitForInputRightPanel()
+        {
+            Console.CursorVisible = false;
+            while (true)
+            {
+                Display();
+                DisplayRightPanel();
+
+                //Handling an enter press
+                if (enterPressed)
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Cyan;
+
+                    if (rightPanelCursorIndex == 0)
+                        currentColor = SafeUserInput.OneByOneConsoleColor("Current color: ", Console.WindowWidth - 29, 8, currentColor);
+                    else if (rightPanelCursorIndex == 1)
+                    {
+                        if (SafeUserInput.OneByOneInt(Console.WindowWidth - 29 + 12, 10, 4, out int result))
+                        {
+                            EditorInstance.SetMapSize(EditorInstance.MapWidth, result);
+                            mapRefreshRequested = true;
+                        }
+                    }
+                    else if (rightPanelCursorIndex == 2)
+                    {
+                        if (SafeUserInput.OneByOneInt(Console.WindowWidth - 29 + 12, 11, 4, out int result))
+                        {
+                            EditorInstance.SetMapSize(result, EditorInstance.MapHeight);
+                            mapRefreshRequested = true;
+                        }
+                    }
+
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    enterPressed = false;
+
+                    continue;
+                }
+
+                ConsoleKeyInfo input = Console.ReadKey(true);
+                switch (input.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        if (rightPanelCursorIndex > 0)
+                            rightPanelCursorIndex--;
+                        break;
+                    case ConsoleKey.DownArrow:
+                        if (rightPanelCursorIndex < 2)
+                            rightPanelCursorIndex++;
+                        break;
+                    case ConsoleKey.Tab:
+                        currentTabIndex = 0;
+                        enterPressed = false;
+                        Console.CursorVisible = true;
+                        return;
+                    case ConsoleKey.Enter:
+                        enterPressed = !enterPressed;
+                        break;
+                    case ConsoleKey.Escape:
+                        shutDown = true;
+                        return;
                 }
             }
         }
 
+        //Displaying methods
         private void Display()
         {
-            Console.CursorVisible = false;
             if (mapRefreshRequested)
             {
                 RemoveMap();
@@ -134,7 +264,6 @@ namespace Cave_Explorer.Graphic_Components
             DisplayRightPanel();
 
             Console.SetCursorPosition(cursorLeftPosition + mapStartLeftMargin - currentLeftMargin, cursorTopPosition + mapStartTopMargin - currentTopMargin);
-            Console.CursorVisible = true;
         }
         private void DisplayMap()
         {
@@ -164,12 +293,61 @@ namespace Cave_Explorer.Graphic_Components
         }
         private void DisplayRightPanel()
         {
+            string color = StringToColor.ConvertToString(currentColor).PadRight(12);
+
             MainMenuHelper.MakeFrame(Console.WindowWidth - 31, 0);
             int textStart = Console.WindowWidth - 29;
             MainMenuHelper.WriteInCenter("Settings", 3, textStart, 2);
 
             MainMenuHelper.WriteText("Current X position: " + cursorLeftPosition.ToString().PadRight(4), textStart, 5);
             MainMenuHelper.WriteText("Current Y position: " + (EditorInstance.MapHeight - cursorTopPosition - 1).ToString().PadRight(4), textStart, 6);
+
+            if(currentTabIndex == 0)
+            {
+                MainMenuHelper.WriteText("Current color: " + color, textStart, 8);
+                MainMenuHelper.WriteText("Map height: " + EditorInstance.MapHeight.ToString().PadRight(4), textStart, 10);
+                MainMenuHelper.WriteText("Map width:  " + EditorInstance.MapWidth.ToString().PadRight(4), textStart, 11);
+            }
+            else if (currentTabIndex == 1)
+            {
+                //Current color
+                if (rightPanelCursorIndex == 0)
+                {
+                    if (!enterPressed)
+                        MainMenuHelper.WriteText("Current color: " + color, textStart, 8, ConsoleColor.Gray, ConsoleColor.Blue);
+                    else if (enterPressed)
+                        MainMenuHelper.WriteText("Current color: " + color, textStart, 8, ConsoleColor.Black, ConsoleColor.Cyan);
+                }
+                else
+                    MainMenuHelper.WriteText("Current color: " + color, textStart, 8);
+
+                //Map height
+                string mapHeight = EditorInstance.MapHeight.ToString().PadRight(4);
+                MainMenuHelper.WriteText("Map height: ", textStart, 10);
+                if (rightPanelCursorIndex == 1)
+                {
+                    
+                    if (!enterPressed)
+                        MainMenuHelper.WriteText(mapHeight, textStart + 12, 10, ConsoleColor.Gray, ConsoleColor.Blue);
+                    else if (enterPressed)
+                        MainMenuHelper.WriteText(mapHeight, textStart + 12, 10, ConsoleColor.Black, ConsoleColor.Cyan);
+                }
+                else
+                    MainMenuHelper.WriteText(mapHeight, textStart + 12, 10);
+
+                //Map width
+                string mapWidth = EditorInstance.MapWidth.ToString().PadRight(4);
+                MainMenuHelper.WriteText("Map width:  ", textStart, 11);
+                if (rightPanelCursorIndex == 2)
+                {
+                    if (!enterPressed)
+                        MainMenuHelper.WriteText(mapWidth, textStart + 12, 11, ConsoleColor.Gray, ConsoleColor.Blue);
+                    else if (enterPressed)
+                        MainMenuHelper.WriteText(mapWidth, textStart + 12, 11, ConsoleColor.Black, ConsoleColor.Cyan);
+                }
+                else
+                    MainMenuHelper.WriteText(mapWidth, textStart + 12, 11);
+            }
         }
 
         private void RemoveMap()
@@ -177,7 +355,7 @@ namespace Cave_Explorer.Graphic_Components
             for(int i = 0; i < EditorInstance.MapHeight; i++)
             {
                 Console.SetCursorPosition(mapStartLeftMargin, mapStartTopMargin + i);
-                Console.Write("".PadRight(EditorInstance.MapWidth));
+                Console.Write("".PadRight(maxMapWidth));
             }
         }
     }

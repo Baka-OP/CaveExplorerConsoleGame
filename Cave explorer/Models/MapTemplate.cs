@@ -63,6 +63,7 @@ namespace Cave_Explorer.Models
             TextFileTemplatePath = textFileTemplatePath;
 
             TextFileTemplate = System.IO.File.ReadAllText(textFileTemplatePath);
+            TextFileTemplate = TextFileTemplate.Replace("\r", "");
             string[] lines = TextFileTemplate.Split('\n');
             MapHeight = lines.Length;
             MapWidth = Helper.GetLongestStringLength(lines);
@@ -103,7 +104,7 @@ namespace Cave_Explorer.Models
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public void SetIndexValue(int x, int y, char value) => Layout[x, y] = value;
+        public void SetIndexValue(int left, int top, char value) => Layout[left, top] = value;
         /// <summary>
         /// Changes the size of the map layout.
         /// </summary>
@@ -112,7 +113,7 @@ namespace Cave_Explorer.Models
         public void ChangeSize(int newWidth, int newHeight)
         {
             char[,] previousLayout = Layout;
-            Layout = new char[newHeight, newWidth];
+            Layout = new char[newWidth, newHeight];
 
             for(int i = 0; i < newHeight; i++)
             {

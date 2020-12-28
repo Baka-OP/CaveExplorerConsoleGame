@@ -12,11 +12,10 @@ namespace Cave_Explorer.Graphic_Components
     {
         string mapNameInput;
 
-        private int currentTabIndex;
         private int currentCursorIndex;
-        private int currentTabIndexLimit;
         private int currentCursorIndexLimit;
         private MapEditorSection currentSection;
+        private List<string> foundMaps;
         public MapEditorMenu()
         {
             mapNameInput = "";
@@ -42,7 +41,6 @@ namespace Cave_Explorer.Graphic_Components
                         if (currentCursorIndex < currentCursorIndexLimit)
                             currentCursorIndex++;
                         break;
-
                     case ConsoleKey.Enter:
                         if(currentSection == MapEditorSection.Menu)
                         {
@@ -50,16 +48,36 @@ namespace Cave_Explorer.Graphic_Components
                             {
                                 case 0:
                                     currentSection = MapEditorSection.NewMap;
+                                    currentCursorIndex = 0;
                                     Console.Clear();
                                     break;
                                 case 1:
                                     currentSection = MapEditorSection.EditMap;
+                                    currentCursorIndex = 0;
                                     Console.Clear();
                                     break;
                                 case 2:
+                                    currentCursorIndex = 0;
                                     Console.Clear();
                                     return;
                             }
+                        }
+                        else if (currentSection == MapEditorSection.EditMap)
+                        {
+                            StartEditor(foundMaps[currentCursorIndex]);
+                        }
+                        break;
+                    case ConsoleKey.Escape:
+                        if(currentSection == MapEditorSection.EditMap)
+                        {
+                            currentSection = MapEditorSection.Menu;
+                            currentCursorIndex = 0;
+                            Console.Clear();
+                        }
+                        else if(currentSection == MapEditorSection.Menu)
+                        {
+                            Console.Clear();
+                            return;
                         }
                         break;
                 }
@@ -77,6 +95,9 @@ namespace Cave_Explorer.Graphic_Components
                     break;
                 case MapEditorSection.NewMap:
                     DisplayNewMap();
+                    break;
+                case MapEditorSection.EditMap:
+                    DisplayEditMap();
                     break;
                 default:
                     throw new ArgumentException("Unexpected section.");
@@ -132,7 +153,7 @@ namespace Cave_Explorer.Graphic_Components
                 {
                     case ConsoleKey.Enter:
                         StartEditor();
-                        break;
+                        return;
                     case ConsoleKey.Backspace:
                         if (mapNameInput.Length > 0)
                             mapNameInput = mapNameInput.Remove(mapNameInput.Length - 1);
@@ -156,13 +177,45 @@ namespace Cave_Explorer.Graphic_Components
                 }
             }
         }
+        private void DisplayEditMap()
+        {
+            foundMaps = Helper.GetAndVerifyMaps(Environment.CurrentDirectory + "\\Map layouts\\Main");
 
+            currentCursorIndexLimit = foundMaps.Count - 1;
+
+            MainMenuHelper.MakeFrame();
+            MainMenuHelper.WriteInCenter("Edit a map", 2);
+
+            for (int i = 0; i < foundMaps.Count; i++)
+            {
+                string mapName = foundMaps[i].Split('\\')[^1];
+                if (currentCursorIndex == i)
+                    MainMenuHelper.WriteInCenter(mapName, 4 + i, ConsoleColor.Gray, ConsoleColor.Blue);
+                else
+                    MainMenuHelper.WriteInCenter(mapName, 4 + i);
+            }
+        }
+
+        /// <summary>
+        /// Starts an editor by using the inputted map name
+        /// </summary>
         private void StartEditor()
         {
             Console.Clear();
-            new MapEditorUI(new MapEditor(Environment.CurrentDirectory + "\\Map Layouts\\Main\\Test"));
+            new MapEditorUI(new MapEditor(mapNameInput)).Start();
             currentSection = MapEditorSection.Menu;
             Console.Clear();
+            Console.CursorVisible = false;
+            DisplaySection();
+        }
+
+        private void StartEditor(string mapDirectory)
+        {
+            Console.Clear();
+            new MapEditorUI(new MapEditor(mapDirectory)).Start();
+            currentSection = MapEditorSection.Menu;
+            Console.Clear();
+            Console.CursorVisible = false;
             DisplaySection();
         }
     }
