@@ -14,6 +14,7 @@ namespace Cave_Explorer
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
             ConsoleHook.DisableAllResizingControl();
+            Console.SetWindowPosition(0, 0);
             new MainMenu();
         }
     }

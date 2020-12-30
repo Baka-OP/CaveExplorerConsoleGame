@@ -2,6 +2,6 @@
 {
     enum EditorUISection
     {
-        EditMap, EditEntities
+        EditMap, EditEntities, EscMenu
     }
 }

@@ -20,6 +20,13 @@ namespace Cave_Explorer.Graphic_Components
         {
             mapNameInput = "";
             currentSection = MapEditorSection.Menu;
+
+            //Do not remove this! This code looks like a duplicate but without it the console window size gets a bit larger before the user presses a button. 
+            //This fixes it, no idea why but it does
+            Console.SetWindowSize(30, 14);
+            Console.SetBufferSize(30, 14);
+            Console.Clear();
+
             DisplaySection();
             WaitForInput();
         }
@@ -107,27 +114,15 @@ namespace Cave_Explorer.Graphic_Components
         {
             currentCursorIndexLimit = 2;
             Console.SetWindowSize(30, 14);
-            Console.SetBufferSize(31, 15);
+            Console.SetBufferSize(30, 14);
 
             MainMenuHelper.MakeFrame();
             MainMenuHelper.WriteInCenter("Map editor", 2);
             MainMenuHelper.FillALine('=', 1, 4);
 
-            if(currentCursorIndex == 0)
-                MainMenuHelper.WriteInCenter("Create a new map", 6, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Create a new map", 6);
-
-            if(currentCursorIndex == 1)
-                MainMenuHelper.WriteInCenter("Edit an existing map", 8, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Edit an existing map", 8);
-            
-            if(currentCursorIndex == 2)
-                MainMenuHelper.WriteInCenter("Back to main menu", 10, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Back to main menu", 10);
-
+            MainMenuHelper.WriteSelectableTextInCenter("Create a new map", 6, 0, currentCursorIndex);
+            MainMenuHelper.WriteSelectableTextInCenter("Edit an existing map", 8, 1, currentCursorIndex);
+            MainMenuHelper.WriteSelectableTextInCenter("Back to main menu", 10, 2, currentCursorIndex);
         }
         private void DisplayNewMap()
         {
@@ -135,7 +130,7 @@ namespace Cave_Explorer.Graphic_Components
             {
                 currentCursorIndexLimit = 2;
                 Console.SetWindowSize(30, 14);
-                Console.SetBufferSize(31, 15);
+                Console.SetBufferSize(30, 14);
 
                 MainMenuHelper.MakeFrame();
                 MainMenuHelper.WriteInCenter("New map", 2);
@@ -189,10 +184,7 @@ namespace Cave_Explorer.Graphic_Components
             for (int i = 0; i < foundMaps.Count; i++)
             {
                 string mapName = foundMaps[i].Split('\\')[^1];
-                if (currentCursorIndex == i)
-                    MainMenuHelper.WriteInCenter(mapName, 4 + i, ConsoleColor.Gray, ConsoleColor.Blue);
-                else
-                    MainMenuHelper.WriteInCenter(mapName, 4 + i);
+                MainMenuHelper.WriteSelectableTextInCenter(mapName, 4 + i, i, currentCursorIndex);
             }
         }
 
@@ -208,7 +200,10 @@ namespace Cave_Explorer.Graphic_Components
             Console.CursorVisible = false;
             DisplaySection();
         }
-
+        /// <summary>
+        /// Starts an editor with the path to a map that is to be edited
+        /// </summary>
+        /// <param name="mapDirectory"></param>
         private void StartEditor(string mapDirectory)
         {
             Console.Clear();

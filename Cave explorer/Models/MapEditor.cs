@@ -92,19 +92,31 @@ namespace Cave_Explorer.Models
             MapHeight = newHeight;
             MapWidth = newWidth;
         }
-        public void SetValue(int left, int top, char value, ConsoleColor color)
+        /// <summary>
+        /// Sets an index of the map with a specific character with a specific color. If that space is occupied, it is overwritten.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="value"></param>
+        /// <param name="color"></param>
+        public void SetIndex(int left, int top, char value, ConsoleColor color)
         {
+            bool templateExists = false;
             foreach(MapTemplate t in Templates)
             {
+                t.SetIndexValue(left, top, ' ');
                 if(t.Color == color)
                 {
                     t.SetIndexValue(left, top, value);
-                    return;
+                    templateExists = true;
                 }
             }
-            MapTemplate template = new MapTemplate(MapWidth, MapHeight, color);
-            template.SetIndexValue(left, top, value);
-            Templates.Add(template);
+            if (!templateExists)
+            {
+                MapTemplate template = new MapTemplate(MapWidth, MapHeight, color);
+                template.SetIndexValue(left, top, value);
+                Templates.Add(template);
+            }
         }
     }
 }

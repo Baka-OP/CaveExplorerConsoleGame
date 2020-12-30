@@ -34,10 +34,9 @@ namespace Cave_Explorer.Graphic_Components
         /// Creates an instance of a main menu and displays it.
         /// </summary>
         public MainMenu()
-        {            
+        {
             Console.SetWindowSize(60, 28);
-            Console.BufferHeight = 29;
-            Console.BufferWidth = 61;
+            Console.SetBufferSize(60, 28);
             Console.CursorVisible = false;
             CurrentSection = MainMenuSection.MainMenu;
 
@@ -200,11 +199,13 @@ namespace Cave_Explorer.Graphic_Components
                 }
             }
         }
-        private void StartEditor()
+        private void StartEditorMenu()
         {
+            Console.Clear();
             new MapEditorMenu();
             CurrentSection = MainMenuSection.MainMenu;
             Console.SetWindowSize(60, 28);
+            Console.SetBufferSize(60, 28);
             DisplaySection();
         }
 
@@ -222,7 +223,7 @@ namespace Cave_Explorer.Graphic_Components
                     DisplayMapSelection();
                     break;
                 case MainMenuSection.Editor:
-                    StartEditor();
+                    StartEditorMenu();
                     break;
                 default:
                     throw new ArgumentException("Unexpected MainMenuSection.");
@@ -237,25 +238,10 @@ namespace Cave_Explorer.Graphic_Components
             DisplayMainTitle();
             MainMenuHelper.FillALine('=', 1, 13);
 
-            if (currentCursorIndex == 0)
-                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Play", 15, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 1)
-                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Editor", 18, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 2)
-                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Settings", 21, ConsoleColor.Gray, ConsoleColor.Black);
-
-            if (currentCursorIndex == 3)
-                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Blue);
-            else
-                MainMenuHelper.WriteInCenter("Exit", 24, ConsoleColor.Gray, ConsoleColor.Black);
+            MainMenuHelper.WriteSelectableTextInCenter("Play", 15, 0, currentCursorIndex);
+            MainMenuHelper.WriteSelectableTextInCenter("Editor", 18, 1, currentCursorIndex);
+            MainMenuHelper.WriteSelectableTextInCenter("Settings", 21, 2, currentCursorIndex);
+            MainMenuHelper.WriteSelectableTextInCenter("Exit", 24, 3, currentCursorIndex);
         }
         private void DisplayMapSelection()
         {

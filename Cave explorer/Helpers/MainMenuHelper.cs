@@ -204,5 +204,39 @@ namespace Cave_Explorer.Helpers
             Console.ForegroundColor = previousForeground;
             Console.BackgroundColor = previousBackground;
         }
+
+        /// <summary>
+        /// Displays text into the center of the screen that can be selected with the cursor. Uses a color based on if it's selected by the cursor or not.
+        /// </summary>
+        /// <param name="text">Text to be written</param>
+        /// <param name="cursorTop">CursorTop position, in which the text will be displayed.</param>
+        /// <param name="indexToBeSelected">Index the cursor needs to have for the text to be selected</param>
+        /// <param name="index">Cursor index</param>
+        /// <param name="notSelectedColor">Background color for the text if the text isn't selected</param>
+        /// <param name="selectedColor">Background color for the text if the text is selected</param>
+        public static void WriteSelectableTextInCenter(string text, int cursorTop, int indexToBeSelected, int index, ConsoleColor notSelectedColor = ConsoleColor.Black, ConsoleColor selectedColor = ConsoleColor.Blue)
+        {
+            if (indexToBeSelected == index)
+                WriteInCenter(text, cursorTop, ConsoleColor.Gray, selectedColor);
+            else
+                WriteInCenter(text, cursorTop, ConsoleColor.Gray, notSelectedColor);
+        }
+        /// <summary>
+        /// Displays text that can be selected with the cursor. Uses a color based on if it's selected by the cursor or not.
+        /// </summary>
+        /// <param name="text">Text to be written</param>
+        /// <param name="cursorLeft">CursorLeft position, in which the text will be displayed</param>
+        /// <param name="cursorTop">CursorTop position, in which the text will be displayed</param>
+        /// <param name="indexToBeSelected">Index the cursor needs to have for the text to be selected</param>
+        /// <param name="index">Cursor index</param>
+        /// <param name="notSelectedColor">Background color for the text if the text isn't selected</param>
+        /// <param name="selectedColor">Background color for the text if the text is selected</param>
+        public static void WriteSelectableText(string text, int cursorLeft, int cursorTop, int indexToBeSelected, int index, ConsoleColor notSelectedColor = ConsoleColor.Black, ConsoleColor selectedColor = ConsoleColor.Blue)
+        {
+            if (indexToBeSelected == index)
+                WriteText(text, cursorLeft, cursorTop, ConsoleColor.Gray, selectedColor);
+            else
+                WriteText(text, cursorLeft, cursorTop, ConsoleColor.Gray, notSelectedColor);
+        }
     }
 }
