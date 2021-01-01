@@ -13,8 +13,8 @@ namespace Cave_Explorer
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.OutputEncoding = System.Text.Encoding.Unicode;
             Console.InputEncoding = System.Text.Encoding.Unicode;
+            Console.Title = "Cave explorer";
             ConsoleHook.DisableAllResizingControl();
-            Console.SetWindowPosition(0, 0);
             new MainMenu();
         }
     }

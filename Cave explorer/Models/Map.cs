@@ -34,21 +34,8 @@ namespace Cave_Explorer.Models
                 if (helper.EndsWith("template.txt"))
                 {
                     helper = helper.Replace("template.txt", "");
-                    switch (helper)
-                    {
-                        case "red":
-                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Red));
-                            break;
-                        case "green":
-                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Green));
-                            break;
-                        case "blue":
-                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Blue));
-                            break;
-                        case "gray":
-                            MapTemplates.Add(new MapTemplate(s, ConsoleColor.Gray));
-                            break;
-                    }
+                    ConsoleColor templateColor = StringToColor.ConvertFromString(helper);
+                    MapTemplates.Add(new MapTemplate(s, templateColor));
                 }
             }
 

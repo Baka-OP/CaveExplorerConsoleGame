@@ -123,19 +123,16 @@ namespace Cave_Explorer.Graphic_Components
             Map = monitoredMap;
             isInstantiated = true;
         }
-        ~Camera()
-        {
-            isInstantiated = false;
-        }
 
         /// <summary>
-        /// Completely displays the whole map. If the camera isn't started, starts it automatically.
+        /// Displays the whole map. If the camera isn't started, starts it automatically.
         /// </summary>
         /// <remarks>Do not use this for displaying a lot of times at once, takes a lot of time to display (80-120ms).</remarks>
         public void DisplayMap()
         {
-            Console.WindowWidth = Console.LargestWindowWidth;
-            Console.WindowHeight = Console.LargestWindowHeight;
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Console.SetBufferSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
+            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
             if (!IsStarted)
                 Start();
 
@@ -185,6 +182,7 @@ namespace Cave_Explorer.Graphic_Components
         public void Stop()
         {
             IsStarted = false;
+            isInstantiated = false;
             Console.Clear();
         }
     }

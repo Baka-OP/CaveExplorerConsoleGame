@@ -35,11 +35,12 @@ namespace Cave_Explorer.Graphic_Components
         /// </summary>
         public MainMenu()
         {
+            //WindowSize needs to be set twice, or else a fake and column appears in the console
             Console.SetWindowSize(60, 28);
             Console.SetBufferSize(60, 28);
+            Console.SetWindowSize(60, 28);
             Console.CursorVisible = false;
             CurrentSection = MainMenuSection.MainMenu;
-
             DisplaySection();
             WaitForInput();
         }
@@ -168,7 +169,7 @@ namespace Cave_Explorer.Graphic_Components
             c.DisplayMap();
             while (true)
             {
-                ConsoleKey pressedKey = Console.ReadKey().Key;
+                ConsoleKey pressedKey = Console.ReadKey(true).Key;
                 switch (pressedKey)
                 {
                     case ConsoleKey.A:

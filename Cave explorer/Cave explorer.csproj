@@ -29,21 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Map layouts\Custom\Custom map test\Entities.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Map layouts\Custom\Custom map test\GrayTemplate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Map layouts\Custom\Test.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Map layouts\Main\Test2\Entities.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Map layouts\Main\Test2\GrayTemplate.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Map layouts\Main\Test\BlueTemplate.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -59,6 +44,10 @@
     <None Update="Map layouts\TestMap\RedTemplate.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Map layouts\Custom\" />
   </ItemGroup>
 
 </Project>

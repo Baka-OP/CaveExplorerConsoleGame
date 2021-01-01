@@ -14,6 +14,7 @@ namespace Cave_Explorer.Models
 
         public string entitiesText;
         public List<MapTemplate> Templates { get; private set; }
+        public string MapDirectoryPath { get; private set; }
         /// <summary>
         /// Instantiates a new editor.
         /// When loading a map, make sure it's parsable, or unpredictable things or crashes might happen.
@@ -24,6 +25,7 @@ namespace Cave_Explorer.Models
             Templates = new List<MapTemplate>();
             if (nameOrPath.Contains('\\'))
             {
+                MapDirectoryPath = nameOrPath;
                 string[] files = Directory.GetFiles(nameOrPath);
                 foreach(string s in files)
                 {
@@ -34,6 +36,7 @@ namespace Cave_Explorer.Models
             else
             {
                 Templates.Add(new MapTemplate(60, 20));
+                MapDirectoryPath = Environment.CurrentDirectory + "\\Map layouts\\Custom\\" + nameOrPath;
             }
 
             //Get widest and tallest map length
@@ -54,7 +57,7 @@ namespace Cave_Explorer.Models
             CheckValues();
         }
         /// <summary>
-        /// Checks the values inside all of the MapTemplates to see if there are any positions that are in occupied by multiple templates. If any are found, clears those positions.
+        /// Checks the values inside all of the MapTemplates to see if there are any positions that are occupied by multiple templates. If any are found, clears those positions.
         /// </summary>
         private void CheckValues()
         {
@@ -116,6 +119,43 @@ namespace Cave_Explorer.Models
                 MapTemplate template = new MapTemplate(MapWidth, MapHeight, color);
                 template.SetIndexValue(left, top, value);
                 Templates.Add(template);
+            }
+        }
+
+        public bool SaveMap()
+        {
+            //First create a backup in case saving fails.
+            if(Directory.Exists(MapDirectoryPath))
+                Directory.Move(MapDirectoryPath, Environment.CurrentDirectory + "\\Map layouts\\Custom\\Backup");
+
+            try
+            {
+                Directory.CreateDirectory(MapDirectoryPath);
+                if (!File.Exists(MapDirectoryPath + "\\Entities.txt"))
+                    File.Create(MapDirectoryPath + "\\Entities.txt").Close();
+
+                foreach (MapTemplate t in Templates)
+                {
+                    StringBuilder line = new StringBuilder();
+                    for (int i = 0; i < t.MapHeight; i++)
+                    {
+                        for (int j = 0; j < t.MapWidth; j++)
+                        {
+                            line.Append(t.Layout[j, i]);
+                        }
+                        line.Append('\n');
+                    }
+                    line.Remove(line.Length - 1, 1);
+                    File.WriteAllText(MapDirectoryPath + "\\" + t.Color.ToString() + "Template.txt", line.ToString());
+                }
+                Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(Environment.CurrentDirectory + "\\Map layouts\\Custom\\Backup", Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                return true;
+            }
+            catch
+            {
+                Directory.Move(Environment.CurrentDirectory + "\\Map layouts\\Custom\\Backup", MapDirectoryPath);
+                Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(MapDirectoryPath, Microsoft.VisualBasic.FileIO.DeleteDirectoryOption.DeleteAllContents);
+                return false;
             }
         }
     }

@@ -247,7 +247,8 @@ namespace Cave_Explorer.Graphic_Components
                         enterPressed = !enterPressed;
                         break;
                     case ConsoleKey.Escape:
-                        shutDown = true;
+                        currentSection = EditorUISection.EscMenu;
+                        Console.Clear();
                         return;
                 }
             }
@@ -259,6 +260,7 @@ namespace Cave_Explorer.Graphic_Components
             currentCursorIndex = 0;
             Console.SetWindowSize(35, 14);
             Console.SetBufferSize(35, 14);
+            Console.SetWindowSize(35, 14);
             while (true)
             {
                 DisplayEscMenu();
@@ -291,6 +293,7 @@ namespace Cave_Explorer.Graphic_Components
                         {
                             shutDown = true;
                             Console.Clear();
+                            EditorInstance.SaveMap();
                             return;
                         }
                         else if (currentCursorIndex == 2)
